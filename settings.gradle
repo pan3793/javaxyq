@@ -1,4 +1,4 @@
-rootProject.name = 'javaxyq'
+rootProject.name = 'open-xyq'
 
 include ':javaxyq-app'
 include ':javaxyq-common'
@@ -8,3 +8,5 @@ include ':javaxyq-resource-manager'
 include ':open-xyq-app'
 include ':open-xyq-core'
 include ':open-xyq-tool'
+
+include ':was-tools'
