@@ -23,7 +23,7 @@ public class SpriteFactory {
 	public static Sprite loadSprite(String filename) {
 		if (filename == null)
 			return null;
-		Sprite sprite = (Sprite) sprites.get(filename);
+		Sprite sprite = sprites.get(filename);
 		if (sprite == null) {
 
 			try {
