@@ -96,6 +96,14 @@ project(":javaxyq-resource-manager") {
     }
 }
 
+project(":mxxy") {
+    dependencies {
+        compile "org.clojars.automata:jl:$jl_version"
+        compile "dom4j:dom4j:$dom4j_version"
+        compile "com.google.code.gson:gson:$gson_version"
+    }
+}
+
 project(":open-xyq-core") {
     dependencies {
         compile "org.slf4j:slf4j-api:$slf4j_version"

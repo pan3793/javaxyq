@@ -5,6 +5,8 @@ include ':javaxyq-common'
 include ':javaxyq-maker'
 include ':javaxyq-resource-manager'
 
+include ':mxxy'
+
 include ':open-xyq-app'
 include ':open-xyq-core'
 include ':open-xyq-tool'
