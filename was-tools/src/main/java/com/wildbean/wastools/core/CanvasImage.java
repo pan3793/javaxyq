@@ -6,98 +6,90 @@ import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
 
-public abstract interface CanvasImage
-  extends Cloneable
-{
-  public static final String SPRITE_INDEX_CHANGED = "sprite index changed";
-  public static final String DATA_CHANGED = "image data changed";
-  public static final int TYPE_STANDARD = 0;
-  public static final int TYPE_SPRITE = 1;
-  public static final int TYPE_CHAT_TEXT = 2;
-  
-  public abstract void draw(Image paramImage);
-  
-  public abstract void update(long paramLong);
-  
-  public abstract void setSpriteIndex(int paramInt);
-  
-  public abstract void setFrameIndex(int paramInt);
-  
-  public abstract void setData(Object paramObject);
-  
-  public abstract int getX();
-  
-  public abstract int getY();
-  
-  public abstract int getWidth();
-  
-  public abstract int getHeight();
-  
-  public abstract String getName();
-  
-  public abstract String getInfo();
-  
-  public abstract int getType();
-  
-  public abstract int getSpriteCount();
-  
-  public abstract int getSpriteIndex();
-  
-  public abstract int getFrameCount();
-  
-  public abstract int getFrameIndex();
-  
-  public abstract boolean isVisible();
-  
-  public abstract void setVisible(boolean paramBoolean);
-  
-  public abstract void setName(String paramString);
-  
-  public abstract boolean contain(Point paramPoint);
-  
-  public abstract void translate(int paramInt1, int paramInt2);
-  
-  public abstract CanvasImage clone();
-  
-  public abstract CanvasImage getLinkedBase();
-  
-  public abstract void setLinkedBase(CanvasImage paramCanvasImage);
-  
-  public abstract void setBase(boolean paramBoolean);
-  
-  public abstract void removePropertyChangeListener(PropertyChangeListener paramPropertyChangeListener);
-  
-  public abstract void setLocation(int paramInt1, int paramInt2);
-  
-  public abstract void addPropertyChangeListener(PropertyChangeListener paramPropertyChangeListener);
-  
-  public abstract void fireDataChanged();
-  
-  public abstract boolean isBase();
-  
-  public abstract void alignToCenter(CanvasImage paramCanvasImage);
-  
-  public abstract void alignToCenter(Rectangle paramRectangle);
-  
-  public abstract void fireSpriteIndexChanged();
-  
-  public abstract int getTotalDelay();
-  
-  public abstract Object getData();
-  
-  public abstract Icon getIcon();
-  
-  public abstract boolean isLinked();
-  
-  public abstract boolean isLinked(Object paramObject);
-  
-  public abstract Rectangle getBounds();
-  
-  public abstract String getTypeName();
+public interface CanvasImage extends Cloneable {
+    String SPRITE_INDEX_CHANGED = "sprite index changed";
+    String DATA_CHANGED = "image data changed";
+    int TYPE_STANDARD = 0;
+    int TYPE_SPRITE = 1;
+    int TYPE_CHAT_TEXT = 2;
+
+    void draw(Image paramImage);
+
+    void update(long paramLong);
+
+    void setSpriteIndex(int paramInt);
+
+    void setFrameIndex(int paramInt);
+
+    void setData(Object paramObject);
+
+    int getX();
+
+    int getY();
+
+    int getWidth();
+
+    int getHeight();
+
+    String getName();
+
+    String getInfo();
+
+    int getType();
+
+    int getSpriteCount();
+
+    int getSpriteIndex();
+
+    int getFrameCount();
+
+    int getFrameIndex();
+
+    boolean isVisible();
+
+    void setVisible(boolean paramBoolean);
+
+    void setName(String paramString);
+
+    boolean contain(Point paramPoint);
+
+    void translate(int paramInt1, int paramInt2);
+
+    CanvasImage clone();
+
+    CanvasImage getLinkedBase();
+
+    void setLinkedBase(CanvasImage paramCanvasImage);
+
+    void setBase(boolean paramBoolean);
+
+    void removePropertyChangeListener(PropertyChangeListener paramPropertyChangeListener);
+
+    void setLocation(int paramInt1, int paramInt2);
+
+    void addPropertyChangeListener(PropertyChangeListener paramPropertyChangeListener);
+
+    void fireDataChanged();
+
+    boolean isBase();
+
+    void alignToCenter(CanvasImage paramCanvasImage);
+
+    void alignToCenter(Rectangle paramRectangle);
+
+    void fireSpriteIndexChanged();
+
+    int getTotalDelay();
+
+    Object getData();
+
+    Icon getIcon();
+
+    boolean isLinked();
+
+    boolean isLinked(Object paramObject);
+
+    Rectangle getBounds();
+
+    String getTypeName();
 }
-
-
-/* Location:              D:\Desktop\WasTools2.0-all.jar!\com\wildbean\wastools\core\CanvasImage.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -3,16 +3,13 @@
  */
 package ui;
 
-import java.awt.Desktop;
-import java.net.URI;
-
 import com.javaxyq.core.GameMain;
 import com.javaxyq.event.ActionEvent;
 import com.javaxyq.event.PanelEvent;
 import com.javaxyq.event.PanelHandler;
 import com.javaxyq.profile.ProfileException;
 import com.javaxyq.ui.Panel;
-import com.javaxyq.util.BrowserLauncher;
+import open.xyq.core.util.PlatformUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +56,7 @@ public class mainmenu extends PanelHandler {
 	}
 	
 	public void home(ActionEvent evt) {
-		BrowserLauncher.openURL(GameMain.getHomeURL());
+		PlatformUtil.openUrl(GameMain.getHomeURL());
 	}
 	
 	public void exit(ActionEvent evt) {

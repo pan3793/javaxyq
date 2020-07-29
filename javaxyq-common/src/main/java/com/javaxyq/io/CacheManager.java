@@ -14,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -22,7 +21,7 @@ import javax.swing.SwingUtilities;
 
 import com.javaxyq.event.DownloadEvent;
 import com.javaxyq.event.DownloadListener;
-import com.javaxyq.util.IoUtil;
+import open.xyq.core.util.IoUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

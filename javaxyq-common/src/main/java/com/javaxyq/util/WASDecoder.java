@@ -16,8 +16,8 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import com.javaxyq.core.Toolkit;
-import com.javaxyq.io.RandomAccessInputStream;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.io.SeekByteArrayInputStream;
 
 /**
  * was(tcp/tca)解码器
@@ -94,7 +94,7 @@ public class WASDecoder {
 
     private List<WASFrame> frames;
 
-    private RandomAccessInputStream randomIn;
+    private SeekByteArrayInputStream randomIn;
 
     public WASDecoder() {
         palette = new short[256];
@@ -426,9 +426,9 @@ public class WASDecoder {
     }
 
 
-    private RandomAccessInputStream prepareInputStream(InputStream in) throws IOException, IllegalStateException {
+    private SeekByteArrayInputStream prepareInputStream(InputStream in) throws IOException, IllegalStateException {
         byte[] buf;
-        RandomAccessInputStream randomIn;
+        SeekByteArrayInputStream randomIn;
         buf = new byte[2];
         in.mark(10);
         in.read(buf, 0, 2);
@@ -436,9 +436,9 @@ public class WASDecoder {
         if (!WAS_FILE_TAG.equals(flag)) {
             throw new IllegalStateException("文件头标志错误:" + print(buf));
         }
-        if (in instanceof RandomAccessInputStream) {
+        if (in instanceof SeekByteArrayInputStream) {
             in.reset();
-            randomIn = (RandomAccessInputStream) in;
+            randomIn = (SeekByteArrayInputStream) in;
         } else {
             byte[] buf2 = new byte[in.available() + buf.length];
             System.arraycopy(buf, 0, buf2, 0, buf.length);
@@ -448,7 +448,7 @@ public class WASDecoder {
                 count += a;
             }
             // construct a new seekable stream
-            randomIn = new RandomAccessInputStream(buf2);
+            randomIn = new SeekByteArrayInputStream(buf2);
         }
         // skip header
         randomIn.seek(2);
@@ -476,7 +476,7 @@ public class WASDecoder {
         load(new FileInputStream(file));
     }
 
-    private int[] parse(RandomAccessInputStream in, int frameOffset, int[] lineOffsets, int frameWidth, int frameHeight)
+    private int[] parse(SeekByteArrayInputStream in, int frameOffset, int[] lineOffsets, int frameWidth, int frameHeight)
             throws IOException {
         int[] pixels = new int[frameHeight * frameWidth];
         int b, x, c;

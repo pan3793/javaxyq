@@ -34,11 +34,6 @@ public class WASEncoder {
 	Vector<Integer> delays;
 
 	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
 	 * @param spriteCount
 	 *            精灵动画个数
 	 * @param frameCount
@@ -55,11 +50,6 @@ public class WASEncoder {
 
 	/**
 	 * 精灵个数为1,动画帧数不确定
-	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
 	 */
 	public WASEncoder(int x, int y, int width, int height) {
 		this(x, y, width, height, 1, -1);
@@ -68,9 +58,6 @@ public class WASEncoder {
 	/**
 	 * 精灵个数为1,动画帧数不确定<br>
 	 * x,y为0
-	 * 
-	 * @param width
-	 * @param height
 	 */
 	public WASEncoder(int width, int height) {
 		this(0, 0, width, height, 1, -1);
@@ -93,8 +80,6 @@ public class WASEncoder {
 
 	/**
 	 * 将图像编码输出到指定的流
-	 * 
-	 * @param out
 	 */
 	public void encode(OutputStream out) {
 

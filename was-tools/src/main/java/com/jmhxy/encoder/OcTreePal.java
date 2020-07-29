@@ -58,12 +58,7 @@ public class OcTreePal {
 		public int compare(Object o1, Object o2) {
 			int r1 = ((OcTreePal.OcTree) o1).m_iRef;
 			int r2 = ((OcTreePal.OcTree) o2).m_iRef;
-			if (r1 < r2)
-				return 1;
-			if (r1 > r2) {
-				return -1;
-			}
-			return 0;
+			return Integer.compare(r2, r1);
 		}
 	}
 

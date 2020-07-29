@@ -3,6 +3,7 @@ package com.javaxyq.util;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.util.IoUtil;
 
 import javax.sql.DataSource;
 import java.io.DataInputStream;
@@ -10,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;

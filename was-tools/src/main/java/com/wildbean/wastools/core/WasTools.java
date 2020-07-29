@@ -36,8 +36,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -87,8 +85,7 @@ import com.jmhxy.core.SpriteFactory;
 import com.jmhxy.encoder.WasDecoder;
 import com.jmhxy.encoder.WasFile;
 import com.jmhxy.encoder.WdfFile;
-import com.jmhxy.util.BrowserLauncher;
-import com.jmhxy.util.SeekByteArrayInputStream;
+import open.xyq.core.io.SeekByteArrayInputStream;
 import com.jmhxy.util.Utils;
 import com.wildbean.wastools.comp.EditableList;
 import com.wildbean.wastools.comp.FilterTreeModel;
@@ -98,6 +95,7 @@ import com.wildbean.wastools.comp.StringFilter;
 import com.wildbean.wastools.comp.TreeFilter;
 import com.wildbean.wastools.comp.WasIcon;
 import com.wildbean.wastools.encoder.AnimatedGifEncoder;
+import open.xyq.core.util.PlatformUtil;
 
 public class WasTools extends JFrame {
     public static final String CMD_LAYER_CUT = "cut layer";
@@ -1538,23 +1536,14 @@ public class WasTools extends JFrame {
                     dlg1.setVisible(true);
                     break;
                 case "help message":
-                    try {
-                        BrowserLauncher.openURL(System.getProperty("user.dir") + "\\help\\index.htm");
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                    PlatformUtil.openUrl(System.getProperty("user.dir") + "\\help\\index.htm");
                     break;
                 case "visit home page":
-                    try {
-                        BrowserLauncher.openURL("http://kylixs.blog.sohu.com");
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                        WasTools.this.setHits("打开主页失败！\n请访问以下地址：http://kylixs.blog.sohu.com", WasTools.HitsType.ERROR);
-                    }
+                    PlatformUtil.openUrl("http://kylixs.blog.sohu.com");
                     break;
                 case "about message":
                     if (WasTools.this.aboutIcon == null) {
-                            WasTools.this.aboutIcon = new ImageIcon("classpath:about.png");
+                        WasTools.this.aboutIcon = new ImageIcon("classpath:about.png");
                     }
                     JOptionPane
                             .showMessageDialog(

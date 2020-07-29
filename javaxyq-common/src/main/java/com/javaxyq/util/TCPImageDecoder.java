@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.concurrent.locks.LockSupport;
 
 import com.javaxyq.core.Toolkit;
-import com.javaxyq.io.RandomAccessInputStream;
 import com.javaxyq.widget.TCPFrame;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.io.SeekByteArrayInputStream;
 
 /**
  * tcp/tca动画解码器
@@ -83,7 +83,7 @@ public class TCPImageDecoder {
      */
     private int height;
 
-    private RandomAccessInputStream in;
+    private SeekByteArrayInputStream in;
 
     private int[] frameOffsets;
 
@@ -331,9 +331,9 @@ public class TCPImageDecoder {
         return pixels;
     }
 
-    private RandomAccessInputStream prepareInputStream(InputStream in) throws IOException, IllegalStateException {
+    private SeekByteArrayInputStream prepareInputStream(InputStream in) throws IOException, IllegalStateException {
         byte[] buf;
-        RandomAccessInputStream randomIn;
+        SeekByteArrayInputStream randomIn;
         buf = new byte[2];
         in.mark(10);
         in.read(buf, 0, 2);
@@ -341,9 +341,9 @@ public class TCPImageDecoder {
         if (!WAS_FILE_TAG.equals(flag)) {
             throw new IllegalStateException("文件头标志错误:" + print(buf));
         }
-        if (in instanceof RandomAccessInputStream) {
+        if (in instanceof SeekByteArrayInputStream) {
             in.reset();
-            randomIn = (RandomAccessInputStream) in;
+            randomIn = (SeekByteArrayInputStream) in;
         } else {
             byte[] buf2 = new byte[in.available() + buf.length];
             System.arraycopy(buf, 0, buf2, 0, buf.length);
@@ -353,7 +353,7 @@ public class TCPImageDecoder {
                 count += a;
             }
             // construct a new seekable stream
-            randomIn = new RandomAccessInputStream(buf2);
+            randomIn = new SeekByteArrayInputStream(buf2);
         }
         // skip header
         randomIn.seek(2);

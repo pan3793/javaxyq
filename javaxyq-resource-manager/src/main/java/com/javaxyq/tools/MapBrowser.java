@@ -1,9 +1,9 @@
 package com.javaxyq.tools;
 
 import com.javaxyq.ui.CenterLayout;
-import com.javaxyq.util.BrowserLauncher;
 import com.javaxyq.util.MapDecoder;
 import com.javaxyq.util.Utils;
+import open.xyq.core.util.PlatformUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,8 +15,6 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URI;
 import java.util.Formatter;
 
 /**
@@ -524,7 +522,7 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
         msgLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                    BrowserLauncher.openURL(url);
+                    PlatformUtil.openUrl(url);
             }
         });
         JOptionPane.showMessageDialog(MapBrowser.this, panel, "Help", JOptionPane.QUESTION_MESSAGE);

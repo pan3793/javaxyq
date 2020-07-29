@@ -1,12 +1,14 @@
 package com.mxxy.game.was;
 
+import open.xyq.core.io.SeekByteArrayInputStream;
+
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class WASImage {
-	private RandomAcessInputStream in;
+	private SeekByteArrayInputStream in;
 
 	private static final int TYPE_ALPHA = 0x00;// 前2位
 
@@ -98,7 +100,7 @@ public class WASImage {
 			}
 
 			// construct a new seekable stream
-			in = new RandomAcessInputStream(buf);
+			in = new SeekByteArrayInputStream(buf);
 			buf = new byte[2];
 			in.read(buf, 0, 2);
 			String flag = new String(buf, 0, 2);

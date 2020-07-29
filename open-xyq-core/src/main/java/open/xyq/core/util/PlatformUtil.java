@@ -15,6 +15,6 @@ public class PlatformUtil {
             log.error("platform doesn't support launcher browser");
             return;
         }
-        Desktop.getDesktop().browse(new URI(url));
+        Desktop.getDesktop().browse(URI.create(url));
     }
 }

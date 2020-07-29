@@ -79,9 +79,6 @@ public class GraphicsUtils {
 
 	/**
 	 * 设置文字抗锯齿
-	 * 
-	 * @param g
-	 * @param flag
 	 */
 	public static void setAntialias(Graphics g, boolean flag) {
 		if (flag) {

@@ -3,7 +3,7 @@ package com.javaxyq.core;
 
 import com.javaxyq.event.PanelListener;
 import com.javaxyq.event.SceneListener;
-import com.javaxyq.util.IoUtil;
+import open.xyq.core.util.IoUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.tools.*;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
@@ -40,9 +39,6 @@ public class DefaultScript implements ScriptEngine {
     private DefaultScript() {
     }
 
-    private String classToJava(String className) {
-        return sourceDir + className.replace('.', '/') + ".java";
-    }
 
     public boolean compile(String filename) {
 

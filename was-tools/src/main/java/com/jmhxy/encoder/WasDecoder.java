@@ -2,13 +2,12 @@ package com.jmhxy.encoder;
 
 import com.jmhxy.animation.WasFrame;
 import com.jmhxy.animation.WasImage;
-import com.jmhxy.util.SeekByteArrayInputStream;
+import open.xyq.core.io.SeekByteArrayInputStream;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.Vector;
 
 public class WasDecoder {

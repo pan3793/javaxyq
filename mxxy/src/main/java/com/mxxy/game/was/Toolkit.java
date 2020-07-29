@@ -70,7 +70,7 @@ public class Toolkit {
 	 * @return Image
 	 */
 	public static Image createImageFromResource(String filename) {
-		byte[] data = (byte[]) null;
+		byte[] data = null;
 		try {
 			data = getResourceData(filename);
 		} catch (IOException e) {
