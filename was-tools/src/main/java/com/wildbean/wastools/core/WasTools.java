@@ -926,7 +926,7 @@ public class WasTools extends JFrame {
         JPanel statusPanel = new JPanel();
         statusPanel.setLayout(new FlowLayout(0));
         statusPanel.setSize(767, 26);
-        WasIcon icon = new WasIcon(SpriteFactory.loadAnimation("icon/statusBar.was"));
+        WasIcon icon = new WasIcon(SpriteFactory.loadAnimation("/icon/statusBar.was"));
         this.hitsLabel = new JLabel("欢迎使用 Was Tools beta 2.0", icon, 2);
         statusPanel.add(this.hitsLabel);
         Thread update = new Thread() {
@@ -1554,12 +1554,7 @@ public class WasTools extends JFrame {
                     break;
                 case "about message":
                     if (WasTools.this.aboutIcon == null) {
-                        try {
-                            WasTools.this.aboutIcon = new ImageIcon(Utils.loadJarFile("/com/wildbean/resources/about.png"));
-                        } catch (IOException e1) {
-                            System.err.println("加载About图片失败");
-                            e1.printStackTrace();
-                        }
+                            WasTools.this.aboutIcon = new ImageIcon("classpath:about.png");
                     }
                     JOptionPane
                             .showMessageDialog(
