@@ -410,10 +410,10 @@ public class item extends PanelHandler implements MouseListener,MouseMotionListe
     	Point bagCell = getCell(e);
     	Point equipCell = getEquipCell1(e);
     	if(bagCell!=null) {
-	    	selectingBorder.setLocation(x0+bagCell.x*cellWidth-1, y0+bagCell.y*cellHeight-1);
+	    	selectingBorder.setLocation((int)(x0+bagCell.x*cellWidth-1), (int)(y0+bagCell.y*cellHeight-1));
 	    	panel.add(selectingBorder,0);
     	}else if(equipCell!=null){
-		    selectingBorder.setLocation(x1+equipCell.x*ecellWidth-1, y1+equipCell.y*ecellHeight-1);
+		    selectingBorder.setLocation((int)(x1+equipCell.x*ecellWidth-1), (int)(y1+equipCell.y*ecellHeight-1));
 		    panel.add(selectingBorder,0);
     	}else {
     		panel.remove(selectingBorder);

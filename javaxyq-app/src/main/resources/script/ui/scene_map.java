@@ -129,7 +129,7 @@ public class scene_map extends PanelHandler implements MouseListener{
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Point target = localToScene(e.getPoint());
-		canvas.walkTo(target.x,target.y);
+		canvas.walkTo((int)(target.x),(int)(target.y));
 	}
 
 	@Override
