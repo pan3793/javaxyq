@@ -99,7 +99,7 @@ public class select_role extends PanelHandler implements MouseListener {
 		}
 
 		try {
-			Profile profile = profiles.get(profileIndex);
+			Profile profile = (Profile) profiles.get(profileIndex);
 			String profileName = profile.getName();
 			application.loadProfile(profileName);
 			application.enterScene();

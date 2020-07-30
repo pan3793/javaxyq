@@ -10,7 +10,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -99,6 +102,14 @@ public class WASDecoder {
         frames = new ArrayList<>();
     }
 
+    public void load(String filename) throws Exception {
+        load(IoUtil.loadResource(filename).getInputStream());
+    }
+
+    public void load(File file) throws IllegalStateException, IOException {
+        load(new FileInputStream(file));
+    }
+
     /**
      * 设置着色方案
      */
@@ -109,39 +120,38 @@ public class WASDecoder {
         this.schemeIndexs = schemeIndexs;
     }
 
+    // TODO read ini file
     @SneakyThrows
     public void loadColorationProfile(String filename) {
         InputStream is = IoUtil.loadResource(filename).getInputStream();
-        if (is != null) {
-            Scanner scanner = new Scanner(is);
-            scanner.useDelimiter("(\r\n)|(\n\r)|[\n\r=]");
-            // section
-            String strLine = scanner.next();
-            String[] values = strLine.split(" ");// StringUtils.split(strLine);
-            int sectionCount = Integer.parseInt(values[0]);
-            // section 区间
-            int[] sectionBounds = new int[sectionCount + 1];
-            for (int i = 0; i < sectionBounds.length; i++) {
-                sectionBounds[i] = Integer.parseInt(values[i + 1]);
-            }
-            // create section
-            Section[] sections = new Section[sectionCount];
-            for (int i = 0; i < sections.length; i++) {
-                Section section = new Section(sectionBounds[i], sectionBounds[i + 1]);
-                int schemeCount = Integer.parseInt(scanner.next());
-                for (int s = 0; s < schemeCount; s++) {
-                    String[] strSchemes = new String[3];
-                    strSchemes[0] = scanner.next();
-                    strSchemes[1] = scanner.next();
-                    strSchemes[2] = scanner.next();
-                    ColorationScheme scheme = new ColorationScheme(strSchemes);
-                    section.addScheme(scheme);
-                }
-
-                sections[i] = section;
-            }
-            setSections(sections);
+        Scanner scanner = new Scanner(is);
+        scanner.useDelimiter("(\r\n)|(\n\r)|[\n\r=]");
+        // section
+        String strLine = scanner.next();
+        String[] values = strLine.split(" ");// StringUtils.split(strLine);
+        int sectionCount = Integer.parseInt(values[0]);
+        // section 区间
+        int[] sectionBounds = new int[sectionCount + 1];
+        for (int i = 0; i < sectionBounds.length; i++) {
+            sectionBounds[i] = Integer.parseInt(values[i + 1]);
         }
+        // create section
+        Section[] sections = new Section[sectionCount];
+        for (int i = 0; i < sections.length; i++) {
+            Section section = new Section(sectionBounds[i], sectionBounds[i + 1]);
+            int schemeCount = Integer.parseInt(scanner.next());
+            for (int s = 0; s < schemeCount; s++) {
+                String[] strSchemes = new String[3];
+                strSchemes[0] = scanner.next();
+                strSchemes[1] = scanner.next();
+                strSchemes[2] = scanner.next();
+                ColorationScheme scheme = new ColorationScheme(strSchemes);
+                section.addScheme(scheme);
+            }
+
+            sections[i] = section;
+        }
+        setSections(sections);
     }
 
     public int[] getSchemeIndexs() {
@@ -452,22 +462,15 @@ public class WASDecoder {
     }
 
     private String print(byte[] buf) {
-        String output = "[";
+        StringBuilder output = new StringBuilder("[");
         for (byte b : buf) {
-            output += b;
-            output += ",";
+            output.append(b);
+            output.append(",");
         }
-        output += "]";
-        return output;
+        output.append("]");
+        return output.toString();
     }
 
-    public void load(String filename) throws Exception {
-        load(IoUtil.loadResource(filename).getInputStream());
-    }
-
-    public void load(File file) throws IllegalStateException, FileNotFoundException, IOException {
-        load(new FileInputStream(file));
-    }
 
     private int[] parse(SeekByteArrayInputStream in, int frameOffset, int[] lineOffsets, int frameWidth, int frameHeight)
             throws IOException {

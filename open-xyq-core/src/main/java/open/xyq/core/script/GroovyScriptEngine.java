@@ -7,6 +7,7 @@ import open.xyq.core.util.IoUtil;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 @Slf4j
 public class GroovyScriptEngine implements ScriptEngine {
@@ -26,7 +27,12 @@ public class GroovyScriptEngine implements ScriptEngine {
     @Override
     public Object loadClass(String className) {
         try {
-            File src = IoUtil.loadFile(scriptDir + "/" + className.replace(".", "/") + ".groovy");
+            File src;
+            try {
+                src = IoUtil.loadFile(scriptDir + "/" + className.replace(".", "/") + ".groovy");
+            } catch (Exception e) {
+                src = IoUtil.loadFile(scriptDir + "/" + className.replace(".", "/") + ".java");
+            }
             Class<?> groovyClass = groovyCl.parseClass(new GroovyCodeSource(src, "UTF-8"));
             return groovyClass.newInstance();
         } catch (Exception e) {

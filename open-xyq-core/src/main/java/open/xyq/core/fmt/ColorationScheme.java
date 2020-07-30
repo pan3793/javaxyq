@@ -52,14 +52,14 @@ public class ColorationScheme {
     }
 
     public short mix(short color) {
-        //red
+        // red
         byte r = (byte) (((color >>> 11) & 0x1F));
-        //green
+        // green
         byte g = (byte) (((color >>> 5) & 0x3f));
-        //blue
+        // blue
         byte b = (byte) ((color & 0x1F));
-        //mix
-        byte[] rgbs = this.mix(r, g, b);
-        return (short) ((rgbs[0] << 11) | (rgbs[1] << 5) | rgbs[2]);
+        // mix
+        byte[] rgb = this.mix(r, g, b);
+        return (short) ((rgb[0] << 11) | (rgb[1] << 5) | rgb[2]);
     }
 }

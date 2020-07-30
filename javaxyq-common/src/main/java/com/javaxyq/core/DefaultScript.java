@@ -3,7 +3,6 @@ package com.javaxyq.core;
 import com.javaxyq.event.PanelListener;
 import com.javaxyq.event.SceneListener;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.script.JaninoScriptEngine;
 
 import java.util.EventListener;
 
@@ -19,7 +18,7 @@ public class DefaultScript implements ScriptEngine {
 
     private static final DefaultScript INSTANCE = new DefaultScript();
 
-    private static final JaninoScriptEngine DELEGATE_SCRIPT_ENGINE = JaninoScriptEngine.INSTANCE;
+    private static final open.xyq.core.script.ScriptEngine DELEGATE_SCRIPT_ENGINE = open.xyq.core.script.ScriptEngine.DEFAULT;
 
     @Override
     public EventListener loadNPCScript(String npcId) {

@@ -1,28 +1,32 @@
 package open.xyq.core.fmt;
 
+import lombok.Getter;
+import open.xyq.core.io.RichRandomAccessFile;
+
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 public class MapDecoder {
+    private static final String MAP_MAGIC_NUMBER = "0.1M";
+    private static final String JPEG_MAGIC_NUM = "GEPJ";
 
+    @Getter
     private int width;
-
+    @Getter
     private int height;
+    @Getter
+    private String filename;
 
     private int[][] segmentsOffset;
 
     private Object[][] jpegDatas;
 
-    private String filename;
+    private RichRandomAccessFile mapFile;
 
-    private MyRandomAccessFile mapFile;
-
+    @Getter
     private int horSegmentCount;
-
+    @Getter
     private int verSegmentCount;
 
     public MapDecoder(String filename) throws Exception {
@@ -31,7 +35,7 @@ public class MapDecoder {
 
     public MapDecoder(File file) throws Exception {
         this.filename = file.getName();
-        mapFile = new MyRandomAccessFile(file, "r");
+        mapFile = new RichRandomAccessFile(file, "r");
         loadHeader();
     }
 
@@ -76,7 +80,7 @@ public class MapDecoder {
         try {
             // read jpeg data
             int len;
-            byte jpegBuf[] = null;
+            byte jpegBuf[];
             mapFile.seek(segmentsOffset[h][v]);// XXX offset
             if (isJPEGData()) {
                 len = mapFile.readInt2();
@@ -131,7 +135,7 @@ public class MapDecoder {
             mapFile.skipBytes(3 + len * 4);
             mapFile.read(buf);// 47 45 50 4A; GEPJ
             String str = new String(buf);
-            return str.equals("GEPJ");
+            return str.equals(JPEG_MAGIC_NUM);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -143,52 +147,10 @@ public class MapDecoder {
         try {
             mapFile.read(buf);
             String str = new String(buf);
-            return str.equals("0.1M");
+            return str.equals(MAP_MAGIC_NUMBER);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         return false;
     }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    class MyRandomAccessFile extends RandomAccessFile {
-
-        public MyRandomAccessFile(String name, String mode) throws FileNotFoundException {
-            super(name, mode);
-        }
-
-        public MyRandomAccessFile(File file, String mode) throws FileNotFoundException {
-            super(file, mode);
-        }
-
-        public int readInt2() throws IOException {
-            int ch1 = this.read();
-            int ch2 = this.read();
-            int ch3 = this.read();
-            int ch4 = this.read();
-            if ((ch1 | ch2 | ch3 | ch4) < 0)
-                throw new EOFException();
-            return ((ch1 << 0) + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
-        }
-    }
-
-    public int getHorSegmentCount() {
-        return horSegmentCount;
-    }
-
-    public int getVerSegmentCount() {
-        return verSegmentCount;
-    }
-
 }

@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 public interface ScriptEngine {
 
+    ScriptEngine DEFAULT = GroovyScriptEngine.INSTANCE;
+
     @Nullable
     @SuppressWarnings("unchecked")
     default <T> T loadClass(String className, Class<T> clazz) {
