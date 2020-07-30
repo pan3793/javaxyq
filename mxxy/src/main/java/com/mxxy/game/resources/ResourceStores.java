@@ -28,9 +28,6 @@ public class ResourceStores {
 
 	/**
 	 * 实例Map配置
-	 * 
-	 * @param id
-	 * @return
 	 */
 	public MapConfigImpl getMapConfig(String id) {
 		MapConfigImpl config = configMap.get(id);

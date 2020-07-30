@@ -1,8 +1,8 @@
 package com.mxxy.game.resources;
 
-public abstract interface ResourceProvider<E> {
+public interface ResourceProvider<E> {
 
-	public abstract E getResource(String paramString);
+	E getResource(String paramString);
 
-	public abstract void dispose();
+	void dispose();
 }

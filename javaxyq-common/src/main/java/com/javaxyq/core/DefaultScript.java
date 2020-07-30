@@ -1,192 +1,38 @@
 package com.javaxyq.core;
 
-
 import com.javaxyq.event.PanelListener;
 import com.javaxyq.event.SceneListener;
-import open.xyq.core.util.IoUtil;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.script.JaninoScriptEngine;
 
-import javax.tools.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.EventListener;
-import java.util.List;
 
 /**
  * 默认脚本语言引擎（java）
- *
- * @author gongdewei
- * @date 2010-6-27 create
  */
 @Slf4j
 public class DefaultScript implements ScriptEngine {
-
-    private static final DefaultScript INSTANCE = new DefaultScript();
 
     public static DefaultScript getInstance() {
         return INSTANCE;
     }
 
-    private String classesDir = "tmp/script_classes";
+    private static final DefaultScript INSTANCE = new DefaultScript();
 
-    private boolean debug;
-    private String sourceDir = "scripts/";
-
-    private DefaultScript() {
-    }
-
-
-    public boolean compile(String filename) {
-
-        File dir = new File(classesDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        log.info("编译" + filename + " ..");
-
-        File file = IoUtil.loadFile(filename);
-
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        DiagnosticCollector diagnostics = new DiagnosticCollector();
-        StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
-        Iterable compilationUnits = fileManager.getJavaFileObjects(file);
-        String[] options = new String[]{"-d", classesDir};
-        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, Arrays.asList(options), null, compilationUnits);
-        boolean success = task.call();
-        try {
-            fileManager.close();
-        } catch (IOException e) {
-            log.error("", e);
-        }
-        log.warn((success) ? "编译成功." : "编译失败!");
-        if (!success) {
-            List<Diagnostic> list = diagnostics.getDiagnostics();
-            for (Diagnostic dia : list) {
-                log.info(dia.toString());
-            }
-        }
-        return success;
-    }
-
-//	public Object compileAndLoadClass(String classname) {
-//		compile(classToJava(classname));
-//		return loadClass(classname);
-//	}
-
-    public String getClassesDir() {
-        return classesDir;
-    }
-
-    public String getSourceDir() {
-        return sourceDir;
-    }
+    private static final JaninoScriptEngine DELEGATE_SCRIPT_ENGINE = JaninoScriptEngine.INSTANCE;
 
     @Override
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public Object loadClass(String className) {
-        try {
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{new File(
-                    classesDir).toURI().toURL()});
-            return classLoader.loadClass(className).newInstance();
-        } catch (MalformedURLException | InstantiationException | IllegalAccessException e) {
-            log.error("", e);
-        } catch (ClassNotFoundException e) {
-            log.error(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public <T> T loadClass(String className, Class<T> clazz) {
-        try {
-            Object classObj = loadClass(className);
-            return (T) classObj;
-        } catch (ClassCastException e) {
-            log.error("加载脚本失败，类型转换错误：" + e.getMessage());
-        } catch (Exception e) {
-            log.error("", e);
-        }
-        return null;
-    }
-
     public EventListener loadNPCScript(String npcId) {
-        try {
-            EventListener obj = (EventListener) loadClass("npc.n" + npcId);
-            if (isDebug() || obj == null) {
-                compile("scripts/npc/n" + npcId + ".java");
-            }
-            return (EventListener) loadClass("npc.n" + npcId);
-        } catch (Exception e) {
-            log.error("", e);
-        }
-        return null;
+        return DELEGATE_SCRIPT_ENGINE.loadClass("npc.n" + npcId, EventListener.class);
     }
 
     @Override
     public SceneListener loadSceneScript(String sceneId) {
-        try {
-            SceneListener obj = (SceneListener) loadClass("scene.s" + sceneId);
-            if (isDebug() || obj == null) {
-                compile("scripts/scene/s" + sceneId + ".java");
-            }
-            return (SceneListener) loadClass("scene.s" + sceneId);
-        } catch (Exception e) {
-            log.error("", e);
-        }
-        return null;
+        return DELEGATE_SCRIPT_ENGINE.loadClass("scene.s" + sceneId, SceneListener.class);
     }
-
 
     @Override
     public PanelListener loadUIScript(String id) {
-        try {
-            PanelListener obj = (PanelListener) loadClass("ui." + id);
-            if (isDebug() || obj == null) {
-                compile("scripts/ui/" + id + ".java");
-            }
-            return (PanelListener) loadClass("ui." + id);
-        } catch (Exception e) {
-            log.error("", e);
-        }
-        return null;
+        return DELEGATE_SCRIPT_ENGINE.loadClass("ui." + id, PanelListener.class);
     }
-
-    public void setClassesDir(String classesDir) {
-        this.classesDir = classesDir;
-    }
-
-    @Override
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
-
-    public void setSourceDir(String sourceDir) {
-        this.sourceDir = sourceDir;
-    }
-
-    @Override
-    public void clearCache() {
-        File dir = new File(classesDir);
-        if (dir.exists()) {
-            deleteAll(dir);
-        }
-    }
-
-    private void deleteAll(File target) {
-        if (target.isDirectory()) {
-            File[] files = target.listFiles();
-            for (File file : files) {
-                deleteAll(file);
-            }
-        }
-        target.delete();
-    }
-
 }

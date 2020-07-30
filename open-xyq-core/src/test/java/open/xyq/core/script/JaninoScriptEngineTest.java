@@ -1,16 +1,18 @@
 package open.xyq.core.script;
 
-import open.xyq.core.util.IoUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JaninoScriptEngineTest {
 
+    private final JaninoScriptEngine scriptEngine = JaninoScriptEngine.INSTANCE;
+
     @Test
-    void testLoadClass() throws ClassNotFoundException {
-        JaninoScriptEngine scriptEngine = new JaninoScriptEngine(IoUtil.loadFile("classpath:script"));
-        Object env = scriptEngine.loadClass("Env");
-        System.out.println(env);
+    void testLoadClass() {
+        Object obj = scriptEngine.loadClass("JavaScript");
+        assertNotNull(obj);
+        Object notExistObj = scriptEngine.loadClass("NotExistScript");
+        assertNull(notExistObj);
     }
 }

@@ -1,8 +1,15 @@
 package open.xyq.core.script;
 
+import javax.annotation.Nullable;
+
 public interface ScriptEngine {
 
-    <T> T loadClass(String className, Class<T> clazz) throws ClassNotFoundException;
+    @Nullable
+    @SuppressWarnings("unchecked")
+    default <T> T loadClass(String className, Class<T> clazz) {
+        return ((T) loadClass(className));
+    }
 
-    Object loadClass(String className) throws ClassNotFoundException;
+    @Nullable
+    Object loadClass(String className);
 }

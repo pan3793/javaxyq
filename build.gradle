@@ -65,7 +65,6 @@ project(":javaxyq-common") {
         compile "org.apache.commons:commons-jexl:$jexl_version"
         compile "com.zaxxer:HikariCP:$hikari_version"
         compile "org.clojars.automata:jl:$automata_version"
-        compile "org.codehaus.groovy:groovy-all:$groovy_version"
         compile "org.xerial:sqlite-jdbc:$sqlite_jdbc_version"
         compile "com.jidesoft:jide-components:$jide_version"
         compile "com.typesafe:config:$typesafe_config_version"
@@ -119,6 +118,11 @@ project(":open-xyq-core") {
         compile "org.xerial:sqlite-jdbc:$sqlite_jdbc_version"
         compile "com.typesafe:config:$typesafe_config_version"
         compile "com.zaxxer:HikariCP:$hikari_version"
+
+        compile "org.codehaus.groovy:groovy:$groovy_version"
+        compile "org.codehaus.groovy:groovy-swing:$groovy_version"
+        compile "org.codehaus.groovy:groovy-xml:$groovy_version"
+        compile "com.google.code.findbugs:jsr305:$jsr_305_version"
 
         testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"

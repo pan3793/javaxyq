@@ -7,19 +7,12 @@ import com.javaxyq.event.SceneListener;
 
 public interface ScriptEngine {
 
-	boolean isDebug();
+    default void clearCache() {
+    }
 
-	void setDebug(boolean debug);
+    PanelListener loadUIScript(String id);
 
-	void clearCache();
+    EventListener loadNPCScript(String npcId);
 
-	<T> T loadClass(String className, Class<T> clazz);
-
-	Object loadClass(String className);
-
-	PanelListener loadUIScript(String id);
-
-	EventListener loadNPCScript(String npcId);
-
-	SceneListener loadSceneScript(String sceneId);
+    SceneListener loadSceneScript(String sceneId);
 }

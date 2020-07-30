@@ -111,11 +111,7 @@ public abstract class BaseApplication implements Application {
 
     protected void prepareStartup() {
         scriptEngine = DefaultScript.getInstance();
-        try {
-            scriptEngine.clearCache();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        scriptEngine.clearCache();
         //注册Tooltip组件
         JEXLTooltipTemplate tooltipTemplate = new JEXLTooltipTemplate(context);
         UIFactory.put(UIFactory.TOOLTIP_TEMPLATE, tooltipTemplate);

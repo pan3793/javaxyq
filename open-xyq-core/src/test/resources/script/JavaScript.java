@@ -1,4 +1,4 @@
-public class Env {
+public class JavaScript {
 
     public static final boolean debug = true;
 
