@@ -32,7 +32,7 @@ import com.javaxyq.ui.FloatPanel;
 import com.javaxyq.util.Cheat;
 import com.javaxyq.util.MP3Player;
 import com.javaxyq.util.UIUtils;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 
 /**
  * 游戏人物

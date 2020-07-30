@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class WASImage {
+public class WasImage {
     private static final String WAS_FILE_TAG = "SP";
     private static final int WAS_IMAGE_HEADER_SIZE = 12;
     // 前2位
@@ -36,7 +36,7 @@ public class WASImage {
 
     public int frameCount;
 
-    public WASFrame[][] frames;
+    public WasFrame[][] frames;
 
     public int height;
 
@@ -52,7 +52,7 @@ public class WASImage {
 
     public int width;
 
-    public WASImage() {
+    public WasImage() {
         palette = new short[256];
     }
 
@@ -130,12 +130,12 @@ public class WASImage {
             for (int i = 0; i < 256; i++) {
                 palette[i] = readUnsignedShort();
             }
-            frames = new WASFrame[spriteCount][];
+            frames = new WasFrame[spriteCount][];
             in.seek(imageHeaderSize + 4 + 512);
             for (int i = 0; i < spriteCount; i++) {
-                frames[i] = new WASFrame[frameCount];
+                frames[i] = new WasFrame[frameCount];
                 for (int n = 0; n < frameCount; n++) {// 帧偏移列表
-                    WASFrame frame = new WASFrame();
+                    WasFrame frame = new WasFrame();
                     frames[i][n] = frame;
                     if (delayLine != null && n < delayLine.length) {
                         frames[i][n].setDelay(delayLine[n]);
@@ -145,7 +145,7 @@ public class WASImage {
             }
             for (int i = 0; i < spriteCount; i++) {// 帧信息
                 for (int n = 0; n < frameCount; n++) {
-                    WASFrame frame = frames[i][n];
+                    WasFrame frame = frames[i][n];
                     int offset = frame.getFrameOffset();
                     if (offset == 0)
                         continue;// blank frame
@@ -181,7 +181,7 @@ public class WASImage {
      * 将图片一行RLE编码格式的数据解码,解码后的数据放到pixels中<br>
      * 格式:低16位为[565]rgb颜色值,16-20位为alpha值(最大为0x1F);
      */
-    public void parse(WASFrame frame) throws IOException {
+    public void parse(WasFrame frame) throws IOException {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
         int[] pixels = new int[frameHeight * frameWidth];
@@ -254,38 +254,6 @@ public class WASImage {
         int ch1 = in.read();
         int ch2 = in.read();
         return (short) ((ch2 << 8) + ch1);
-    }
-
-    public String toString() {
-        StringBuffer buf = new StringBuffer();
-        buf.append("文件路径:\t");
-        buf.append(path);
-        buf.append("\r\n");
-        buf.append("文件标志:\t");
-        buf.append(WAS_FILE_TAG);
-        buf.append("\r\n");
-        buf.append("文件头大小:\t");
-        buf.append(imageHeaderSize);
-        buf.append("\r\n");
-        buf.append("动画精灵数:\t");
-        buf.append(spriteCount);
-        buf.append("\r\n");
-        buf.append("动画帧数:\t");
-        buf.append(frameCount);
-        buf.append("\r\n");
-        buf.append("动画的宽度:\t");
-        buf.append(width);
-        buf.append("\r\n");
-        buf.append("动画的高度:\t");
-        buf.append(height);
-        buf.append("\r\n");
-        buf.append("动画X中心点:\t");
-        buf.append(centerX);
-        buf.append("\r\n");
-        buf.append("动画Y中心点:\t");
-        buf.append(centerY);
-        buf.append("\r\n");
-        return buf.toString();
     }
 }
 

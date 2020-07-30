@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import com.javaxyq.io.CacheManager;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 import com.javaxyq.widget.Animation;
 import com.javaxyq.widget.Sprite;
 import lombok.extern.slf4j.Slf4j;
@@ -52,12 +52,12 @@ public class SpriteFactory {
     }
 
     public static Sprite createSprite(InputStream is) throws Exception {
-        WASDecoder decoder = new WASDecoder();
+        WasDecoder decoder = new WasDecoder();
         decoder.load(is);
         return createSprite(decoder);
     }
 
-    private static Sprite createSprite(WASDecoder decoder) {
+    private static Sprite createSprite(WasDecoder decoder) {
         int centerX, centerY;
         centerX = decoder.getRefPixelX();
         centerY = decoder.getRefPixelY();
@@ -119,7 +119,7 @@ public class SpriteFactory {
         if (filename == null || filename.trim().length() == 0)
             return null;
         try {
-            WASDecoder decoder = new WASDecoder();
+            WasDecoder decoder = new WasDecoder();
             File file = CacheManager.getInstance().getFile(filename);
             if (file == null || !file.exists()) {
                 log.error("Warning: 找不到精灵的资源文件!" + filename);

@@ -17,7 +17,7 @@ import java.io.InputStream;
 import javax.swing.ImageIcon;
 
 import com.javaxyq.core.SpriteFactory;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 import com.javaxyq.widget.Sprite;
 import com.jidesoft.utils.Lm;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +76,7 @@ public class XYQTools {
     }
 
     public static ImageIcon createSpriteIcon(FileObject node, int frameIndex) {
-        WASDecoder decoder = new WASDecoder();
+        WasDecoder decoder = new WasDecoder();
         try {
             decoder.load(node.getDataStream());
             return new ImageIcon(decoder.getFrame(frameIndex));

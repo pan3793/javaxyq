@@ -16,7 +16,7 @@ import com.javaxyq.core.Toolkit;
 import com.javaxyq.widget.Animation;
 import com.javaxyq.widget.Sprite;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 
 /**
  * @author 龚德伟
@@ -25,8 +25,8 @@ import open.xyq.core.fmt.WASDecoder;
 @Slf4j
 public class ColorationUtil {
 
-    public static WASDecoder getDecoder(String resId, String profile) throws IllegalStateException, IOException {
-        WASDecoder decoder = new WASDecoder();
+    public static WasDecoder getDecoder(String resId, String profile) throws IllegalStateException, IOException {
+        WasDecoder decoder = new WasDecoder();
         InputStream is = Toolkit.getInputStream(resId);
         decoder.load(is);
         decoder.loadColorationProfile(profile);
@@ -35,7 +35,7 @@ public class ColorationUtil {
 
     public static void recreate(Sprite sprite, String profile) {
         try {
-            WASDecoder decoder = getDecoder(sprite.getResId(), profile);
+            WasDecoder decoder = getDecoder(sprite.getResId(), profile);
             //设置染色方式
             int partCount = decoder.getSectionCount() - 1;
             for (int i = 0; i < partCount; i++) {

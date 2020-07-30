@@ -27,7 +27,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import open.xyq.core.fmt.Section;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI Builder, which is free
@@ -66,7 +66,7 @@ public class PaletteViewer extends javax.swing.JFrame {
 
     protected JPopupMenu popupMenu;
 
-    protected Map<String, WASDecoder> decoders;
+    protected Map<String, WasDecoder> decoders;
 
     /**
      * Auto-generated main method to display this JFrame
@@ -78,7 +78,7 @@ public class PaletteViewer extends javax.swing.JFrame {
 
     public PaletteViewer() {
         super();
-        decoders = new HashMap<String, WASDecoder>();
+        decoders = new HashMap<String, WasDecoder>();
         initGUI();
     }
 
@@ -146,7 +146,7 @@ public class PaletteViewer extends javax.swing.JFrame {
                                 }
                                 dir = files[0].getParentFile();
                                 for (File file : files) {
-                                    WASDecoder decoder = new WASDecoder();
+                                    WasDecoder decoder = new WasDecoder();
                                     try {
                                         decoder.load(file.getAbsolutePath());
                                     } catch (Exception e1) {
@@ -224,7 +224,7 @@ public class PaletteViewer extends javax.swing.JFrame {
     }
 
     private void previewScheme(String name) {
-        WASDecoder decoder = decoders.get(name);
+        WasDecoder decoder = decoders.get(name);
         decoder.loadColorationProfile(schemeFile.getAbsolutePath());
         Section[] sections = decoder.getSections();
         JPanel page = new JPanel();
@@ -246,7 +246,7 @@ public class PaletteViewer extends javax.swing.JFrame {
     private void browserPalette(File[] files) {
         Dimension lableSize = new Dimension(30, 18);
         for (File file : files) {
-            WASDecoder decoder = new WASDecoder();
+            WasDecoder decoder = new WasDecoder();
             try {
                 decoder.load(new FileInputStream(file));
                 short[] palette = decoder.getPalette();

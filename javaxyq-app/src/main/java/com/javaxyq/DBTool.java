@@ -1,4 +1,4 @@
-package com.javaxyq.tool;
+package com.javaxyq;
 
 import com.javaxyq.util.DBToolkit;
 import lombok.extern.slf4j.Slf4j;

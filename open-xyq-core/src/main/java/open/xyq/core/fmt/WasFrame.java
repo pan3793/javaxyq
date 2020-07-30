@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 @Getter
 @Setter
 @NoArgsConstructor
-public class WASFrame {
+public class WasFrame {
 
     // 帧数据偏移
     private int frameOffset;
@@ -36,7 +36,7 @@ public class WASFrame {
      */
     private int[] pixels;
 
-    public WASFrame(int x, int y, int width, int height, int delay, int frameOffset, int[] lineOffset) {
+    public WasFrame(int x, int y, int width, int height, int delay, int frameOffset, int[] lineOffset) {
         this.x = x;
         this.y = y;
         this.width = width;

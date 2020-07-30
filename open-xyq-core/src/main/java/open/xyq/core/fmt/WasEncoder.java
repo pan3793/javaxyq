@@ -11,7 +11,7 @@ import java.util.Vector;
  * @author Langlauf
  * @date
  */
-public class WASEncoder {
+public class WasEncoder {
     short imageHeaderSize;
 
     short[] palette;
@@ -41,7 +41,7 @@ public class WASEncoder {
      * @param spriteCount 精灵动画个数
      * @param frameCount  每个精灵动画帧数
      */
-    public WASEncoder(int x, int y, int width, int height, int spriteCount, int frameCount) {
+    public WasEncoder(int x, int y, int width, int height, int spriteCount, int frameCount) {
         this.centerX = x;
         this.centerY = y;
         this.width = width;
@@ -53,7 +53,7 @@ public class WASEncoder {
     /**
      * 精灵个数为1,动画帧数不确定
      */
-    public WASEncoder(int x, int y, int width, int height) {
+    public WasEncoder(int x, int y, int width, int height) {
         this(x, y, width, height, 1, -1);
     }
 
@@ -61,7 +61,7 @@ public class WASEncoder {
      * 精灵个数为1,动画帧数不确定<br>
      * x,y为0
      */
-    public WASEncoder(int width, int height) {
+    public WasEncoder(int width, int height) {
         this(0, 0, width, height, 1, -1);
     }
 

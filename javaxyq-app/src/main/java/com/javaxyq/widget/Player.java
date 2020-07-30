@@ -34,7 +34,7 @@ import com.javaxyq.ui.FloatPanel;
 import com.javaxyq.util.Cheat;
 import com.javaxyq.util.MP3Player;
 import com.javaxyq.util.UIUtils;
-import open.xyq.core.fmt.WASDecoder;
+import open.xyq.core.fmt.WasDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -943,7 +943,7 @@ public class Player extends AbstractWidget implements EventTarget {
     public int getColorationCount(int part) {
         if (this.profileData == null) {
             // 解析着色方案
-            WASDecoder decoder = new WASDecoder();
+            WasDecoder decoder = new WasDecoder();
             decoder.loadColorationProfile("shape/char/" + this.character + "/00.pp");
             int partCount = decoder.getSectionCount();
             this.profileData = new int[partCount];
