@@ -1,7 +1,7 @@
 package com.javaxyq.tools;
 
 import com.javaxyq.ui.CenterLayout;
-import com.javaxyq.util.MapDecoder;
+import open.xyq.core.fmt.MapDecoder;
 import com.javaxyq.util.Utils;
 import open.xyq.core.util.PlatformUtil;
 

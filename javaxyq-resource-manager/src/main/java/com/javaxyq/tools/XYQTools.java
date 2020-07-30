@@ -17,7 +17,7 @@ import java.io.InputStream;
 import javax.swing.ImageIcon;
 
 import com.javaxyq.core.SpriteFactory;
-import com.javaxyq.util.WASDecoder;
+import open.xyq.core.fmt.WASDecoder;
 import com.javaxyq.widget.Sprite;
 import com.jidesoft.utils.Lm;
 import lombok.extern.slf4j.Slf4j;

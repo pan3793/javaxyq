@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import com.javaxyq.io.CacheManager;
-import com.javaxyq.util.WASDecoder;
+import open.xyq.core.fmt.WASDecoder;
 import com.javaxyq.widget.Animation;
 import com.javaxyq.widget.Sprite;
 import lombok.extern.slf4j.Slf4j;

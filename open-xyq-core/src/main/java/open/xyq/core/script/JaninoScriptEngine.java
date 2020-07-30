@@ -19,8 +19,8 @@ public class JaninoScriptEngine implements ScriptEngine {
                 this.getClass().getClassLoader(), new File[]{dir}, "UTF-8");
     }
 
-    @Override
     @Nullable
+    @Override
     public Object loadClass(String className) {
         try {
             return cl.loadClass(className).newInstance();

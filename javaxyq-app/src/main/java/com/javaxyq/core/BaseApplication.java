@@ -3,7 +3,7 @@
  */
 package com.javaxyq.core;
 
-import com.javaxyq.Conf;
+import open.xyq.core.Env;
 import com.javaxyq.action.Actions;
 import com.javaxyq.action.BaseAction;
 import com.javaxyq.battle.BattleCanvas;
@@ -64,7 +64,7 @@ public abstract class BaseApplication implements Application {
         //初始化DB连接
         new Thread(() -> {
             //DEBUG
-            if (Conf.debug) {
+            if (Env.debug) {
                 DBToolkit.setForceInit(true);
             }
             DBToolkit.prepareDatabase();

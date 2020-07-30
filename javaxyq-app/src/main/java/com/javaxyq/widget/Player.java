@@ -18,9 +18,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.event.EventListenerList;
 
-import com.javaxyq.Conf;
+import open.xyq.core.Env;
 import com.javaxyq.core.Application;
-import com.javaxyq.core.ApplicationHelper;
 import com.javaxyq.core.SpriteFactory;
 import com.javaxyq.data.CharacterUtils;
 import com.javaxyq.data.WeaponItem;
@@ -35,7 +34,7 @@ import com.javaxyq.ui.FloatPanel;
 import com.javaxyq.util.Cheat;
 import com.javaxyq.util.MP3Player;
 import com.javaxyq.util.UIUtils;
-import com.javaxyq.util.WASDecoder;
+import open.xyq.core.fmt.WASDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -730,7 +729,7 @@ public class Player extends AbstractWidget implements EventTarget {
         }
         if (this.onceEffect != null)
             onceEffect.draw(g, x, y);
-        if (Conf.debug) {
+        if (Env.debug) {
             g.drawLine(x - 10, y, x + 10, y);
             g.drawLine(x, y - 10, x, y + 10);
         }

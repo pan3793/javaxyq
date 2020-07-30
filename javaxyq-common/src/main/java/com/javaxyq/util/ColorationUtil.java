@@ -16,6 +16,7 @@ import com.javaxyq.core.Toolkit;
 import com.javaxyq.widget.Animation;
 import com.javaxyq.widget.Sprite;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.fmt.WASDecoder;
 
 /**
  * @author 龚德伟

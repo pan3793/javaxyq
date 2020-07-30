@@ -20,7 +20,7 @@ public class IoUtil {
     //     file:/absolute_path/filename.ext
     //     file:relative_path/filename.ext
     //     classpath:path/filename.ext
-    private static Resource loadResource(String path) {
+    public static Resource loadResource(String path) {
         return RESOURCE_RESOLVER.getResource(path);
     }
 
@@ -29,7 +29,7 @@ public class IoUtil {
     //     file:relative_path/file*.ext
     //     classpath:**/file*.ext
     @SneakyThrows
-    private static Resource[] loadResources(String path) {
+    public static Resource[] loadResources(String path) {
         return RESOURCE_RESOLVER.getResources(path);
     }
 

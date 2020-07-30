@@ -5,6 +5,7 @@ import groovy.lang.GroovyCodeSource;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.util.IoUtil;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class GroovyScriptEngine implements ScriptEngine {
         scriptDir = dir;
     }
 
+    @Nullable
     @Override
     public Object loadClass(String className) {
         try {

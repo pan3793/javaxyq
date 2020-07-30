@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.javaxyq.Conf;
+import open.xyq.core.Env;
 import com.javaxyq.action.DefaultTalkAction;
 import com.javaxyq.config.MapConfig;
 import com.javaxyq.data.SceneNpc;
@@ -147,7 +147,7 @@ public class SceneCanvas extends Canvas {
             Point p = t.getLocation();
             p = sceneToView(p);
             s.draw(g, p.x, p.y - s.getHeight() / 2 + s.getRefPixelY());
-            if (Conf.debug) {
+            if (Env.debug) {
                 g.drawLine(p.x - 10, p.y, p.x + 10, p.y);
                 g.drawLine(p.x, p.y - 10, p.x, p.y + 10);
             }
@@ -734,7 +734,7 @@ public class SceneCanvas extends Canvas {
 //			System.out.printf("drawMap cost: %s\n", (t1-t0));
 
             // 人物行走路线
-            if (Conf.debug) {
+            if (Env.debug) {
                 this.drawPath(g);
                 this.drawfPath(g);
             }
