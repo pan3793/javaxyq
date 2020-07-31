@@ -30,12 +30,6 @@ abstract public class AbstractCanvas implements AnimationDraw {
 
 	/**
 	 * 子类绘制
-	 * 
-	 * @param g
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param hight
 	 */
 	protected abstract void draw(Graphics2D g, int x, int y, int width, int hight);
 

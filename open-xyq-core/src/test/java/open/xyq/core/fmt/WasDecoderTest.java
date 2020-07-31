@@ -18,7 +18,6 @@ public class WasDecoderTest {
         decoder.load("was/银两.tcp");
         assertEquals(1, decoder.getAnimCount());
         assertEquals(1, decoder.getFrameCount());
-        BufferedImage image = decoder.getFrame(0);
         log.info(decoder.summary());
     }
 
@@ -31,5 +30,17 @@ public class WasDecoderTest {
         assertEquals(1, decoder.getFrameCount());
         BufferedImage image = decoder.getFrame(0);
         UiUtil.launchImageAppBlocked(image);
+    }
+
+    @Test
+    @Disabled
+    public void testLaunchAnimation() throws Exception  {
+        WasDecoder decoder = new WasDecoder();
+        // 8个方向的跑动动画，每个动画8帧
+        decoder.load("was/虎头怪_行走.was");
+        assertEquals(8, decoder.getAnimCount());
+        assertEquals(8, decoder.getFrameCount());
+        BufferedImage image = decoder.getFrame(63);
+        // UiUtil.launchAnimationAppBlocked(image);
     }
 }

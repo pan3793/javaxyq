@@ -342,8 +342,6 @@ public class BattlePanel extends AbstactPanel implements ISetOnListener<BattlePa
 
 	/**
 	 * 播放一次法术动画
-	 * 
-	 * @param true  为播放音乐
 	 */
 	public void playOnceMagic() {
 		getUIHelp().hidePanel(BATTLE_ROLE_WARMAGIC);

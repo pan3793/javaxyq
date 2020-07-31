@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.io.SeekByteArrayInputStream;
 import open.xyq.core.util.IoUtil;
+import open.xyq.core.util.StrUtil;
 import org.apache.groovy.util.Arrays;
 
 import java.awt.*;
@@ -67,9 +68,9 @@ public class WasDecoder {
     private Section[] sections;
 
     @Getter // 原始调色板
-    private short[] originPalette = new short[256];
+    private final short[] originPalette = new short[256];
     @Getter // 当前调色板
-    private short[] palette = new short[256];
+    private final short[] palette = new short[256];
     private final List<WasFrame> frames = new ArrayList<>();
 
     public String summary() {
@@ -301,24 +302,11 @@ public class WasDecoder {
         }
     }
 
-    public BufferedImage getFullFrame(int index) {
-        WasFrame frame = this.frames.get(index);
-        try {
-            if (frame.getPixels() == null) {
-                frame.setPixels(parse(frame));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return createImage(refPixelX, refPixelY, frame.getWidth(), frame.getHeight(), frame.getPixels());
-    }
-
     private int[] parse(WasFrame frame) throws IOException {
         return this.parse(randomIn, frame.getFrameOffset(), frame.getLineOffsets(), frame.getWidth(), frame.getHeight());
     }
 
-    public Vector<Image> getFrames() {
+    public List<Image> getFrames() {
         // TODO
         return null;
     }
@@ -358,12 +346,16 @@ public class WasDecoder {
     }
 
 
+    /**
+     * 1. ensure MAGIC_NUM is SP
+     * 2. copy data to byte[] to construct SeekByteArrayInputStream
+     */
     private SeekByteArrayInputStream prepareInputStream(InputStream in) throws IOException {
         byte[] buf = new byte[2];
-        in.mark(10);
-        in.read(buf, 0, 2);
-        if (!WAS_MAGIC_NUM.equals(new String(buf))) {
-            throw new IllegalStateException("文件头标志错误");
+        in.mark(2);
+        int l = in.read(buf, 0, 2);
+        if (l < 2 || !WAS_MAGIC_NUM.equals(new String(buf))) {
+            throw new IllegalStateException("文件头标志错误: " + StrUtil.prettyBytes(buf));
         }
         SeekByteArrayInputStream randomIn;
         if (in instanceof SeekByteArrayInputStream) {

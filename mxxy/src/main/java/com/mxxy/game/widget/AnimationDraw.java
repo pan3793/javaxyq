@@ -5,44 +5,31 @@ import java.awt.Graphics;
 public interface AnimationDraw {
 	/**
 	 * 指定 x y
-	 * 
-	 * @param g
-	 * @param x
-	 * @param y
 	 */
-	public void drawBitmap(Graphics g, int x, int y);
+	void drawBitmap(Graphics g, int x, int y);
 	/**
 	 * 指定 x, y ,width,height
-	 * 
-	 * @param g
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param hight
 	 */
-	public void drawBitmap(Graphics g, int x, int y, int width, int hight);
+	void drawBitmap(Graphics g, int x, int y, int width, int height);
 
-	public abstract void fadeIn(long paramLong);
+	void fadeIn(long paramLong);
 
-	public abstract void fadeOut(long paramLong);
+	void fadeOut(long paramLong);
 
-	public abstract int getWidth();
+	int getWidth();
 
-	public abstract int getHeight();
+	int getHeight();
 
-	public abstract boolean contains(int paramInt1, int paramInt2);
+	boolean contains(int paramInt1, int paramInt2);
 	
 	/**
 	 * 设置坐标
-	 * 
-	 * @param x
-	 * @param y
 	 */
-	public abstract void setLocation(int x, int y);
+	void setLocation(int x, int y);
 
 	/**
 	 * 销毁
 	 */
-	public abstract void dispose();
+	void dispose();
 
 }

@@ -18,6 +18,10 @@ public class UiUtil {
         blockUntilExit(frame);
     }
 
+    public static void launchAnimationAppBlocked(Image[] images) {
+
+    }
+
     private static void blockUntilExit(JFrame frame) {
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         AtomicBoolean closed = new AtomicBoolean(false);

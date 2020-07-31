@@ -125,7 +125,7 @@ public class WasDecoder {
 		if (len < 0)
 			throw new Exception("帧延时信息错: " + len);
 		for (int i = 0; i < len; i++) {
-			this.delays.add(Integer.valueOf(sIn.read()));
+			this.delays.add(sIn.read());
 		}
 
 		sIn.seek(imageHeaderSize + 4);

@@ -221,8 +221,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 设置状态 实例 Person 对象
-	 * 
-	 * @param state
 	 */
 	public void setState(String state) {
 		if (state == null) {
@@ -249,8 +247,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 更新动画
-	 * 
-	 * @param elapsedTime
 	 */
 	public void update(long elapsedTime) {
 		if (shadow != null)
@@ -272,8 +268,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 设置方向
-	 * 
-	 * @param direction
 	 */
 	public void setDirection(int direction) {
 		if (this.direction != direction) {
@@ -317,8 +311,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 修改人物动作 并修改坐标
-	 * 
-	 * @param elapsedTime
 	 */
 	public void updateMovement(long elapsedTime) {
 		this.setState(this.isMoving() ? mMount != null ? STATE_MOUNT_WALK : STATE_WALK : this.state);
@@ -339,10 +331,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 单次播放效果动画
-	 * 
-	 * @param name
-	 * @param sound
-	 *            TODO
 	 */
 	public void playEffect(String name, boolean sound, String race) {
 		Animation s = SpriteFactory.loadAnimation("res/magic/" + race + "/" + name + ".tcp");
@@ -420,8 +408,6 @@ public class Players implements IEventTask {
 
 	/**
 	 * 添加事件
-	 * 
-	 * @param scenePlayerHandler
 	 */
 	public void addPlayerListener(IPlayerListener l) {
 		listenerList.add(IPlayerListener.class, l);
