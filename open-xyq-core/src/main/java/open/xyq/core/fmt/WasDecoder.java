@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.io.SeekByteArrayInputStream;
 import open.xyq.core.util.IoUtil;
+import org.apache.groovy.util.Arrays;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.MappedByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,6 +28,9 @@ import java.util.Vector;
  */
 @Slf4j
 public class WasDecoder {
+    // 文件头标记
+    static final String WAS_MAGIC_NUM = "SP";
+    static final int TCP_HEADER_SIZE = 12;
     // 前2位
     static final int TYPE_ALPHA = 0x00;
     // 前3位 0010 0000
@@ -40,9 +45,6 @@ public class WasDecoder {
     static final int TYPE_REPEAT = 0x80;
     // 1100 0000
     static final int TYPE_SKIP = 0xC0;
-    // 文件头标记
-    static final String WAS_FILE_TAG = "SP";
-    static final int TCP_HEADER_SIZE = 12;
 
     // 文件头大小
     private int headerSize;
@@ -54,10 +56,6 @@ public class WasDecoder {
     private int refPixelX;
     @Getter
     private int refPixelY;
-    @Getter // 原始调色板
-    private short[] originPalette;
-    @Getter // 当前调色板
-    private short[] palette;
     @Getter // 精灵宽度
     private int width;
     @Getter // 精灵高度
@@ -67,7 +65,12 @@ public class WasDecoder {
     @Getter
     @Setter
     private Section[] sections;
-    private List<WasFrame> frames;
+
+    @Getter // 原始调色板
+    private short[] originPalette = new short[256];
+    @Getter // 当前调色板
+    private short[] palette = new short[256];
+    private final List<WasFrame> frames = new ArrayList<>();
 
     public String summary() {
         return "========== summary ==========\n" +
@@ -79,12 +82,6 @@ public class WasDecoder {
     }
 
     private SeekByteArrayInputStream randomIn;
-
-    public WasDecoder() {
-        originPalette = new short[256];
-        palette = new short[256];
-        frames = new ArrayList<>();
-    }
 
     public void load(String filename) throws Exception {
         load(IoUtil.loadResource(filename).getInputStream());
@@ -361,21 +358,19 @@ public class WasDecoder {
     }
 
 
-    private SeekByteArrayInputStream prepareInputStream(InputStream in) throws IOException, IllegalStateException {
-        byte[] buf;
-        SeekByteArrayInputStream randomIn;
-        buf = new byte[2];
+    private SeekByteArrayInputStream prepareInputStream(InputStream in) throws IOException {
+        byte[] buf = new byte[2];
         in.mark(10);
         in.read(buf, 0, 2);
-        String flag = new String(buf, 0, 2);
-        if (!WAS_FILE_TAG.equals(flag)) {
+        if (!WAS_MAGIC_NUM.equals(new String(buf))) {
             throw new IllegalStateException("文件头标志错误");
         }
+        SeekByteArrayInputStream randomIn;
         if (in instanceof SeekByteArrayInputStream) {
             in.reset();
             randomIn = (SeekByteArrayInputStream) in;
         } else {
-            byte[] buf2 = new byte[in.available() + buf.length];
+            byte[] buf2 = new byte[buf.length + in.available()];
             System.arraycopy(buf, 0, buf2, 0, buf.length);
             int a = 0, count = buf.length;
             while (in.available() > 0) {
