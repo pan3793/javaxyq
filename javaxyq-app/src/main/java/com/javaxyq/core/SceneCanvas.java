@@ -828,10 +828,8 @@ public class SceneCanvas extends Canvas {
     }
 
     public TileMap getMap(String id) {
-
         TileMapProvider tileMapProvider = new TileMapProvider();
         TileMap m = tileMapProvider.getResource(id);
-
         m.setAlpha(1.0f);
         return m;
     }

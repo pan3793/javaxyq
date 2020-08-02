@@ -33,7 +33,7 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
 import com.javaxyq.ui.CenterLayout;
-import open.xyq.core.JMap;
+import open.xyq.core.ui.JMap;
 import open.xyq.core.Utils;
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,9 +2,9 @@ package com.javaxyq.tools;
 
 import com.javaxyq.ui.CenterLayout;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.JMap;
 import open.xyq.core.Utils;
-import open.xyq.core.fmt.map.MapDecoder;
+import open.xyq.core.fmt.map.TileMapProvider;
+import open.xyq.core.ui.JMap;
 import open.xyq.core.util.PlatformUtil;
 
 import javax.imageio.ImageIO;
@@ -25,11 +25,9 @@ import java.io.OutputStream;
  * @history 2008-03-09 增加导出整张地图的功能
  */
 @Slf4j
-public class MapBrowser extends JFrame implements WindowListener {
+public class MapBrowser extends JFrame {
 
     private static final long serialVersionUID = 1L;
-
-    private static final String SETTINGS_FILENAME = "Map Browser.ini";
 
     private static final String APP_TITLE = "Map Browser for 梦幻西游 (v1.2 build20080309)";
 
@@ -38,6 +36,12 @@ public class MapBrowser extends JFrame implements WindowListener {
     private static final Cursor MOVE_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
 
     private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+
+    public static void main(String[] args) {
+        Utils.iniGlobalFont();
+        MapBrowser inst = new MapBrowser();
+        inst.setVisible(true);
+    }
 
     private String filename;
 
@@ -59,17 +63,9 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     private JLabel segmentsLabel;
 
-    public static void main(String[] args) {
-        Utils.iniGlobalFont();
-        MapBrowser inst = new MapBrowser();
-        inst.setVisible(true);
-    }
-
     public MapBrowser() {
         super();
-        Utils.loadSettings(SETTINGS_FILENAME);
         initGUI();
-        addWindowListener(this);
     }
 
     private void initGUI() {
@@ -228,7 +224,6 @@ public class MapBrowser extends JFrame implements WindowListener {
     }
 
     private void exit() {
-        Utils.saveSettings("Map Browser Settings", SETTINGS_FILENAME);
         System.exit(0);
     }
 
@@ -338,7 +333,7 @@ public class MapBrowser extends JFrame implements WindowListener {
                 saveFile = new File(filename + ".jpg");
             }
             try {
-                MapDecoder decoder = this.map.getDecoder();
+                TileMapProvider decoder = this.map.getDecoder();
                 Rectangle rect = new Rectangle(decoder.getWidth(), decoder.getHeight());
                 BufferedImage bi = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
                 Graphics g = bi.getGraphics();
@@ -361,14 +356,14 @@ public class MapBrowser extends JFrame implements WindowListener {
         File saveFile = Utils.showSaveDialog(this, "导出地图", Utils.JPEG_FILTER, filename);
         if (saveFile != null) {
             try {
-                MapDecoder decoder = this.map.getDecoder();
+                TileMapProvider decoder = this.map.getDecoder();
                 int hCount = decoder.getHBlockCount();
                 int vCount = decoder.getVBlockCount();
                 for (int h = 0; h < hCount; h++) {
                     for (int v = 0; v < vCount; v++) {
                         String blockFileName = String.format("%s_%02d_%02d.jpg", filename, v + 1, h + 1);
                         try (OutputStream out = new FileOutputStream(blockFileName)) {
-                            byte[] data = decoder.getJpegData(h, v);
+                            byte[] data = decoder.readJpegData(h, v);
                             out.write(data);
                         }
                     }
@@ -380,28 +375,6 @@ public class MapBrowser extends JFrame implements WindowListener {
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    public void windowActivated(WindowEvent e) {
-    }
-
-    public void windowClosed(WindowEvent e) {
-        Utils.saveSettings("Map Browser Settings", SETTINGS_FILENAME);
-    }
-
-    public void windowClosing(WindowEvent e) {
-    }
-
-    public void windowDeactivated(WindowEvent e) {
-    }
-
-    public void windowDeiconified(WindowEvent e) {
-    }
-
-    public void windowIconified(WindowEvent e) {
-    }
-
-    public void windowOpened(WindowEvent e) {
     }
 
     private void showIntroduction() {

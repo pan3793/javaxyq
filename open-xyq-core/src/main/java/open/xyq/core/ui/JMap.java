@@ -1,4 +1,4 @@
-package open.xyq.core;
+package open.xyq.core.ui;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.Vector;
@@ -14,22 +13,21 @@ import java.util.Vector;
 import javax.swing.JComponent;
 
 import lombok.AllArgsConstructor;
-import open.xyq.core.fmt.map.MapDecoder;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.fmt.map.TileMapProvider;
 
 /**
  * 显示游戏地图的控件
  * TODO 多线程加载,paint不等待
  */
 @Slf4j
-@Deprecated
 public class JMap extends JComponent {
 
     private static final long serialVersionUID = 1L;
 
     private final Rectangle maxVisibleRect = new Rectangle();
 
-    private MapDecoder decoder;
+    private TileMapProvider decoder;
 
     private LinkedList<MapImage> loadedImages = new LinkedList<>();
 
@@ -113,8 +111,7 @@ public class JMap extends JComponent {
             for (int v = mapArea.top; v <= mapArea.bottom; v++) {
                 mapimage = removeMapImage(h, v);
                 if (mapimage == null) {
-                    byte[] imageData = decoder.getJpegData(h, v);
-                    Image image = Toolkit.getDefaultToolkit().createImage(imageData);
+                    Image image = decoder.getBlockImage(h, v);
                     mapimage = new MapImage(image, h, v);
                     ImageLoadThread thread = getLoadThread();
                     thread.setLoadingImage(image);
@@ -239,7 +236,7 @@ public class JMap extends JComponent {
         if (file == null)
             return false;
         try {
-            decoder = new MapDecoder(file);
+            decoder = new TileMapProvider(file);
             setSize(decoder.getWidth(), decoder.getHeight());
             setPreferredSize(new Dimension(decoder.getWidth(), decoder.getHeight()));
             loadedImages = new LinkedList<MapImage>();
@@ -338,7 +335,7 @@ public class JMap extends JComponent {
         }
     }
 
-    public MapDecoder getDecoder() {
+    public TileMapProvider getDecoder() {
         return decoder;
     }
 }

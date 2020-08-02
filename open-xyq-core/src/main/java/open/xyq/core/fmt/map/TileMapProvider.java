@@ -21,6 +21,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -50,6 +51,15 @@ public class TileMapProvider implements MapProvider {
     private int[][] blockOffsetTable;
     // mask偏移量
     private int[] maskOffsets;
+
+    public TileMapProvider() {
+    }
+
+    @SneakyThrows
+    public TileMapProvider(File file) {
+        raf = new RichRandomAccessFile(file, "r");
+        decodeMetadata();
+    }
 
     @Override
     public String getVersion() {
@@ -168,7 +178,7 @@ public class TileMapProvider implements MapProvider {
         return ImageIO.read(new ByteArrayInputStream(data));
     }
 
-    private synchronized byte[] readJpegData(int h, int v) {
+    public synchronized byte[] readJpegData(int h, int v) {
         try {
             raf.seek(blockOffsetTable[h][v]);
             if (!checkJpegMagic())

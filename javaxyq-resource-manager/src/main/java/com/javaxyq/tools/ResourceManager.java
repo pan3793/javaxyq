@@ -61,7 +61,7 @@ import open.xyq.core.fmt.DefaultFileSystem;
 import open.xyq.core.fmt.FileObject;
 import open.xyq.core.fmt.FileSystem;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.JMap;
+import open.xyq.core.ui.JMap;
 import open.xyq.core.fmt.wdf.WdfFile;
 import open.xyq.core.fmt.wdf.WdfFileNode;
 import org.jdesktop.application.Action;

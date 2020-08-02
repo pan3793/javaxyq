@@ -44,7 +44,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import com.javaxyq.core.SpriteFactory;
 import com.javaxyq.data.PreexistingEntityException;
 import com.javaxyq.data.SceneNpc;
-import open.xyq.core.JMap;
+import open.xyq.core.ui.JMap;
 import com.javaxyq.ui.Label;
 import com.javaxyq.util.UIUtils;
 import com.javaxyq.widget.Animation;
