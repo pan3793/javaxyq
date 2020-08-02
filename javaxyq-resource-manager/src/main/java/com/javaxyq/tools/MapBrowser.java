@@ -9,8 +9,6 @@ import open.xyq.core.util.PlatformUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
@@ -18,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Formatter;
 
 /**
  * 梦幻西游地图查看器
@@ -34,9 +31,19 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     private static final String SETTINGS_FILENAME = "Map Browser.ini";
 
-    private JScrollPane mapScrollPanel;
+    private static final String APP_TITLE = "Map Browser for 梦幻西游 (v1.2 build20080309)";
+
+    private static final String USER_NAME = "anybody";
+
+    private static final Cursor MOVE_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
+
+    private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+
+    private String filename;
 
     private JMap map;
+
+    private JScrollPane mapScrollPanel;
 
     private JPanel centerPanel;
 
@@ -52,19 +59,6 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     private JLabel segmentsLabel;
 
-    private String filename;
-
-    private static String appTitle = "Map Browser for 梦幻西游 (v1.2 build20080309)";
-
-    private static String userName = "anybody";
-
-    private static Cursor MOVE_CURSOR = new Cursor(Cursor.MOVE_CURSOR);
-
-    private static Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
-
-    /**
-     * Auto-generated main method to display this JFrame
-     */
     public static void main(String[] args) {
         Utils.iniGlobalFont();
         MapBrowser inst = new MapBrowser();
@@ -80,219 +74,151 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     private void initGUI() {
         try {
-            {
-                statusPanel = new JPanel();
-                GridLayout jPanel1Layout = new GridLayout(1, 1);
-                jPanel1Layout.setHgap(5);
-                jPanel1Layout.setVgap(5);
-                jPanel1Layout.setColumns(1);
-                statusPanel.setLayout(jPanel1Layout);
-                getContentPane().add(statusPanel, BorderLayout.SOUTH);
-                statusPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-                statusPanel.setPreferredSize(new java.awt.Dimension(10, 20));
-                {
-                    hitsLabel = new JLabel();
-                    statusPanel.add(hitsLabel);
-                    hitsLabel.setText("Hits");
-                }
-                {
-                    pathLabel = new JLabel();
-                    statusPanel.add(pathLabel);
-                    pathLabel.setText("filename");
-                }
-                {
-                    sizeLabel = new JLabel();
-                    statusPanel.add(sizeLabel);
-                    sizeLabel.setText("size");
-                }
-                {
-                    segmentsLabel = new JLabel();
-                    statusPanel.add(segmentsLabel);
-                    segmentsLabel.setText("segments");
-                }
-                {
-                    viewRectLabel = new JLabel();
-                    statusPanel.add(viewRectLabel);
-                    viewRectLabel.setText("viewsRect");
-                    viewRectLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                    viewRectLabel.addMouseListener(new MouseAdapter() {
-                        public void mouseClicked(MouseEvent e) {
-                            Rectangle rect = map.getVisibleRect();
-                            MapDialog dlg = new MapDialog(MapBrowser.this, rect.width, rect.height);
-                            dlg.setVisible(true);
-                            Dimension d = dlg.getVisibleSize();
-                            if (d.width != rect.width || d.height != rect.height) {
-                                setViewportSize(d.width, d.height);
-                            }
-                        }
-                    });
-                }
-            }
-            {
-                centerPanel = new JPanel();
-                BorderLayout jPanel2Layout = new BorderLayout();
-                centerPanel.setLayout(jPanel2Layout);
-                getContentPane().add(centerPanel, BorderLayout.CENTER);
-                centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-                {
-                    mapScrollPanel = new JScrollPane();
-                    mapScrollPanel.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-                    centerPanel.add(mapScrollPanel, BorderLayout.CENTER);
-                    {
-                        map = new JMap();
-                        //map.setWatermark(watermark);
-//						map.setTag(userName);
-                        JPanel mapPanel = new JPanel(new CenterLayout());
-                        mapPanel.add("Center", map);
-                        mapScrollPanel.setViewportView(mapPanel);
-                        MouseInputAdapter mapMouseHandler = new MouseInputAdapter() {
-                            Point begPos;
-
-                            public void mousePressed(MouseEvent e) {
-                                setCursor(MOVE_CURSOR);
-                                begPos = e.getPoint();
-                            }
-
-                            public void mouseReleased(MouseEvent e) {
-                                setCursor(DEFAULT_CURSOR);
-                                begPos = null;
-                            }
-
-                            public void mouseDragged(MouseEvent e) {
-                                // setCursor(MOVE_CURSOR);
-                                if (begPos == null)
-                                    return;
-                                JViewport viewport = mapScrollPanel.getViewport();
-                                Point nowPos = e.getPoint();
-                                Point viewPos = viewport.getViewPosition();
-                                viewPos.translate(begPos.x - nowPos.x, begPos.y - nowPos.y);
-                                if (viewPos.x < 0)
-                                    viewPos.x = 0;
-                                if (viewPos.y < 0)
-                                    viewPos.y = 0;
-                                Dimension size = viewport.getViewSize();
-                                Rectangle viewRect = viewport.getViewRect();
-                                int maxX = size.width - viewRect.width;
-                                int maxY = size.height - viewRect.height;
-                                if (viewPos.x > maxX)
-                                    viewPos.x = maxX;
-                                if (viewPos.y > maxY)
-                                    viewPos.y = maxY;
-                                viewport.setViewPosition(viewPos);
-                            }
-                        };
-                        map.addMouseListener(mapMouseHandler);
-                        map.addMouseMotionListener(mapMouseHandler);
+            statusPanel = new JPanel();
+            GridLayout jPanel1Layout = new GridLayout(1, 1);
+            jPanel1Layout.setHgap(5);
+            jPanel1Layout.setVgap(5);
+            jPanel1Layout.setColumns(1);
+            statusPanel.setLayout(jPanel1Layout);
+            getContentPane().add(statusPanel, BorderLayout.SOUTH);
+            statusPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+            statusPanel.setPreferredSize(new Dimension(10, 20));
+            hitsLabel = new JLabel();
+            statusPanel.add(hitsLabel);
+            hitsLabel.setText("Hits");
+            pathLabel = new JLabel();
+            statusPanel.add(pathLabel);
+            pathLabel.setText("filename");
+            sizeLabel = new JLabel();
+            statusPanel.add(sizeLabel);
+            sizeLabel.setText("size");
+            segmentsLabel = new JLabel();
+            statusPanel.add(segmentsLabel);
+            segmentsLabel.setText("segments");
+            viewRectLabel = new JLabel();
+            statusPanel.add(viewRectLabel);
+            viewRectLabel.setText("viewsRect");
+            viewRectLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            viewRectLabel.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    Rectangle rect = map.getVisibleRect();
+                    MapDialog dlg = new MapDialog(MapBrowser.this, rect.width, rect.height);
+                    dlg.setVisible(true);
+                    Dimension d = dlg.getVisibleSize();
+                    if (d.width != rect.width || d.height != rect.height) {
+                        setViewportSize(d.width, d.height);
                     }
-                    mapScrollPanel.getViewport().addChangeListener(new ChangeListener() {
-                        public void stateChanged(ChangeEvent e) {
-                            setViewRect(map.getVisibleRect());
-                        }
-                    });
                 }
-            }
+            });
+            centerPanel = new JPanel();
+            BorderLayout jPanel2Layout = new BorderLayout();
+            centerPanel.setLayout(jPanel2Layout);
+            getContentPane().add(centerPanel, BorderLayout.CENTER);
+            centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+            mapScrollPanel = new JScrollPane();
+            mapScrollPanel.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+            centerPanel.add(mapScrollPanel, BorderLayout.CENTER);
+            map = new JMap();
+            //map.setWatermark(watermark);
+//						map.setTag(userName);
+            JPanel mapPanel = new JPanel(new CenterLayout());
+            mapPanel.add("Center", map);
+            mapScrollPanel.setViewportView(mapPanel);
+            MouseInputAdapter mapMouseHandler = new MouseInputAdapter() {
+                Point begPos;
+
+                public void mousePressed(MouseEvent e) {
+                    setCursor(MOVE_CURSOR);
+                    begPos = e.getPoint();
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                    setCursor(DEFAULT_CURSOR);
+                    begPos = null;
+                }
+
+                public void mouseDragged(MouseEvent e) {
+                    // setCursor(MOVE_CURSOR);
+                    if (begPos == null)
+                        return;
+                    JViewport viewport = mapScrollPanel.getViewport();
+                    Point nowPos = e.getPoint();
+                    Point viewPos = viewport.getViewPosition();
+                    viewPos.translate(begPos.x - nowPos.x, begPos.y - nowPos.y);
+                    if (viewPos.x < 0)
+                        viewPos.x = 0;
+                    if (viewPos.y < 0)
+                        viewPos.y = 0;
+                    Dimension size = viewport.getViewSize();
+                    Rectangle viewRect = viewport.getViewRect();
+                    int maxX = size.width - viewRect.width;
+                    int maxY = size.height - viewRect.height;
+                    if (viewPos.x > maxX)
+                        viewPos.x = maxX;
+                    if (viewPos.y > maxY)
+                        viewPos.y = maxY;
+                    viewport.setViewPosition(viewPos);
+                }
+            };
+            map.addMouseListener(mapMouseHandler);
+            map.addMouseMotionListener(mapMouseHandler);
+            mapScrollPanel.getViewport().addChangeListener(e -> setViewRect(map.getVisibleRect()));
             JMenuBar mainMenuBar = new JMenuBar();
             setJMenuBar(mainMenuBar);
+            JMenu jMenu3 = new JMenu();
+            mainMenuBar.add(jMenu3);
+            jMenu3.setText("文件");
+            // {
+            // JMenuItem newFileMenuItem = new JMenuItem();
+            // jMenu3.add(newFileMenuItem);
+            // newFileMenuItem.setText("New");
+            // }
+            JMenuItem openFileMenuItem = new JMenuItem();
+            jMenu3.add(openFileMenuItem);
+            openFileMenuItem.setText("打开(O)");
+            openFileMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_MASK));
+            openFileMenuItem.addActionListener(e -> openFile());
+            JMenuItem snapMenuItem = new JMenuItem();
+            jMenu3.add(snapMenuItem);
+            snapMenuItem.setText("截屏(S)");
+            snapMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_MASK));
+            snapMenuItem.addActionListener(e -> exportJPEG());
             {
-                JMenu jMenu3 = new JMenu();
-                mainMenuBar.add(jMenu3);
-                jMenu3.setText("文件");
-                // {
-                // JMenuItem newFileMenuItem = new JMenuItem();
-                // jMenu3.add(newFileMenuItem);
-                // newFileMenuItem.setText("New");
-                // }
-                {
-                    JMenuItem openFileMenuItem = new JMenuItem();
-                    jMenu3.add(openFileMenuItem);
-                    openFileMenuItem.setText("打开(O)");
-                    openFileMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', KeyEvent.CTRL_MASK));
-                    openFileMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            openFile();
-                        }
-                    });
-                }
-                {
-                    JMenuItem snapMenuItem = new JMenuItem();
-                    jMenu3.add(snapMenuItem);
-                    snapMenuItem.setText("截屏(S)");
-                    snapMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', KeyEvent.CTRL_MASK));
-                    snapMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            exportJPEG();
-                        }
-                    });
-                }
-                {
-                    JMenuItem exportMenuItem = new JMenuItem();
-                    jMenu3.add(exportMenuItem);
-                    exportMenuItem.setText("导出整张地图(E)");
-                    exportMenuItem.setAccelerator(KeyStroke.getKeyStroke('E', KeyEvent.CTRL_MASK));
-                    exportMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            exportMap();
-                        }
-                    });
-                }
-                {
-                    JMenuItem exportMenuItem = new JMenuItem();
-                    jMenu3.add(exportMenuItem);
-                    exportMenuItem.setText("导出地图块(B)");
-                    exportMenuItem.setAccelerator(KeyStroke.getKeyStroke('B', KeyEvent.CTRL_MASK));
-                    exportMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            exportBlocks();
-                        }
-                    });
-                }
-                // {
-                // JMenuItem closeFileMenuItem = new JMenuItem();
-                // jMenu3.add(closeFileMenuItem);
-                // closeFileMenuItem.setText("Close");
-                // }
-                {
-                    JSeparator jSeparator2 = new JSeparator();
-                    jMenu3.add(jSeparator2);
-                }
-                {
-                    JMenuItem exitMenuItem = new JMenuItem();
-                    jMenu3.add(exitMenuItem);
-                    exitMenuItem.setText("退出");
-                    exitMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            exit();
-                        }
-                    });
-                }
+                JMenuItem exportMenuItem = new JMenuItem();
+                jMenu3.add(exportMenuItem);
+                exportMenuItem.setText("导出整张地图(E)");
+                exportMenuItem.setAccelerator(KeyStroke.getKeyStroke('E', KeyEvent.CTRL_MASK));
+                exportMenuItem.addActionListener(e -> exportMap());
             }
-            {
-                JMenu jMenu5 = new JMenu();
-                mainMenuBar.add(jMenu5);
-                jMenu5.setText("帮助");
-                {
-                    JMenuItem helpMenuItem = new JMenuItem();
-                    jMenu5.add(helpMenuItem);
-                    helpMenuItem.setText("功能介绍");
-                    helpMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            showIntroduction();
-                        }
-                    });
-                }
-                {
-                    JMenuItem aboutMenuItem = new JMenuItem();
-                    jMenu5.add(aboutMenuItem);
-                    aboutMenuItem.setText("关于");
-                    aboutMenuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            showAbout();
-                        }
-                    });
-                }
-            }
+            JMenuItem exportMenuItem = new JMenuItem();
+            jMenu3.add(exportMenuItem);
+            exportMenuItem.setText("导出地图块(B)");
+            exportMenuItem.setAccelerator(KeyStroke.getKeyStroke('B', KeyEvent.CTRL_MASK));
+            exportMenuItem.addActionListener(e -> exportBlocks());
+            // {
+            // JMenuItem closeFileMenuItem = new JMenuItem();
+            // jMenu3.add(closeFileMenuItem);
+            // closeFileMenuItem.setText("Close");
+            // }
+            JSeparator jSeparator2 = new JSeparator();
+            jMenu3.add(jSeparator2);
+            JMenuItem exitMenuItem = new JMenuItem();
+            jMenu3.add(exitMenuItem);
+            exitMenuItem.setText("退出");
+            exitMenuItem.addActionListener(e -> exit());
+            JMenu jMenu5 = new JMenu();
+            mainMenuBar.add(jMenu5);
+            jMenu5.setText("帮助");
+            JMenuItem helpMenuItem = new JMenuItem();
+            jMenu5.add(helpMenuItem);
+            helpMenuItem.setText("功能介绍");
+            helpMenuItem.addActionListener(e -> showIntroduction());
+            JMenuItem aboutMenuItem = new JMenuItem();
+            jMenu5.add(aboutMenuItem);
+            aboutMenuItem.setText("关于");
+            aboutMenuItem.addActionListener(e -> showAbout());
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setTitle(appTitle);
+            setTitle(APP_TITLE);
             pack();
             setSize(650, 520);
             setLocationRelativeTo(null);
@@ -308,9 +234,6 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     /**
      * 设置Viewport可视区域大小
-     *
-     * @param width
-     * @param height
      */
     private void setViewportSize(int width, int height) {
         JViewport viewport = mapScrollPanel.getViewport();
@@ -337,8 +260,6 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     /**
      * 设置提示信息
-     *
-     * @param hits
      */
     private void setHits(String hits) {
         hitsLabel.setText(hits);
@@ -346,8 +267,6 @@ public class MapBrowser extends JFrame implements WindowListener {
 
     /**
      * 设置当前可视区域
-     *
-     * @param rect
      */
     private void setViewRect(Rectangle rect) {
         viewRectLabel.setText("[" + rect.x + "," + rect.y + "," + rect.width + "," + rect.height + "]");
@@ -395,7 +314,7 @@ public class MapBrowser extends JFrame implements WindowListener {
             boolean b = map.loadMap(file);
             filename = file.getName();
             if (b) {
-                setTitle(filename + " - " + appTitle);
+                setTitle(filename + " - " + APP_TITLE);
                 JViewport viewport = mapScrollPanel.getViewport();
                 viewport.setViewPosition(new Point());
                 viewport.setViewSize(map.getSize());
@@ -513,7 +432,7 @@ public class MapBrowser extends JFrame implements WindowListener {
     private void showAbout() {
         String msg =
                 "Map Browser\n" + "Version: v1.2\n" + "Build  : 2008-3-9\n" + "Author : Kylixs\n"
-                        + "E-mail : kylixs@qq.com\n\n" + "授权用户: " + userName + "\n\n"
+                        + "E-mail : kylixs@qq.com\n\n" + "授权用户: " + USER_NAME + "\n\n"
                         + "特别感谢: Foxer、wangdali\n";
         JOptionPane.showMessageDialog(MapBrowser.this, msg, "About",
                 JOptionPane.INFORMATION_MESSAGE, Utils.loadIcon("about.png"));

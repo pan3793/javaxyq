@@ -12,7 +12,7 @@ import com.javaxyq.ui.XmlDialogBuilder;
 
 import com.javaxyq.util.ClassUtil;
 import com.javaxyq.util.ClosureTask
-import open.xyq.core.config.ImageConfig
+import open.xyq.core.cfg.ImageConfig
 
 import java.awt.image.BufferedImage;
 

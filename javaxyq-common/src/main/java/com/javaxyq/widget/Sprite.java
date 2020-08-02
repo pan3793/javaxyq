@@ -7,6 +7,8 @@
 
 package com.javaxyq.widget;
 
+import open.xyq.core.AbstractWidget;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;

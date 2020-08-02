@@ -6,7 +6,7 @@ import java.awt.event.ItemEvent;
 
 import javax.swing.JCheckBox;
 
-import com.mxxy.game.base.SwingApplication;
+import com.mxxy.game.SwingApplication;
 import com.mxxy.game.handler.AbstractPanelHandler;
 import com.mxxy.game.modler.SettingModeler;
 import com.mxxy.game.utils.MP3Player;

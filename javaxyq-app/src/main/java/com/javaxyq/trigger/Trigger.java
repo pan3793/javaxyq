@@ -10,7 +10,7 @@ package com.javaxyq.trigger;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import com.javaxyq.widget.Widget;
+import open.xyq.core.ui.Widget;
 
 /**
  * @author 龚德伟

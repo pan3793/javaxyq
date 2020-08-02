@@ -5,7 +5,7 @@
  * http://www.javaxyq.com
  */
 
-package open.xyq.core.config;
+package open.xyq.core.cfg;
 
 /**
  * @author 龚德伟

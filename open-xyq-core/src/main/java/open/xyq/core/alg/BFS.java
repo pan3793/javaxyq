@@ -1,6 +1,4 @@
-package com.javaxyq.algorithm;
-
-import com.javaxyq.search.Searcher;
+package open.xyq.core.alg;
 
 import java.awt.*;
 import java.util.List;

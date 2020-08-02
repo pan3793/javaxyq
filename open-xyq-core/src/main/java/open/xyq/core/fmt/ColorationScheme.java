@@ -16,10 +16,9 @@ public class ColorationScheme {
 
     public ColorationScheme(String[] schemes) {
         for (int r = 0; r < schemes.length; r++) {
-            String[] colorArray = schemes[r].split(" ");
-            for (int c = 0; c < colorArray.length; c++) {
-                colors[r][c] = Short.parseShort(colorArray[c]);
-            }
+            String[] colors = schemes[r].split(" ");
+            for (int c = 0; c < colors.length; c++)
+                this.colors[r][c] = Short.parseShort(colors[c]);
         }
     }
 
@@ -38,28 +37,18 @@ public class ColorationScheme {
      * B2=B2>>8
      */
     public byte[] mix(byte r, byte g, byte b) {
-        int r2 = ((r * colors[0][0] + g * colors[0][1] + b * colors[0][2]) >>> 8);
-        int g2 = ((r * colors[1][0] + g * colors[1][1] + b * colors[1][2]) >>> 8);
-        int b2 = ((r * colors[2][0] + g * colors[2][1] + b * colors[2][2]) >>> 8);
-        r2 = Math.min(r2, 0x1f);
-        g2 = Math.min(g2, 0x3f);
-        b2 = Math.min(b2, 0x1f);
         byte[] comps = new byte[3];
-        comps[0] = (byte) r2;
-        comps[1] = (byte) g2;
-        comps[2] = (byte) b2;
+        comps[0] = (byte) Math.min(r * colors[0][0] + g * colors[0][1] + b * colors[0][2] >>> 8, 0x1f);
+        comps[1] = (byte) Math.min(r * colors[1][0] + g * colors[1][1] + b * colors[1][2] >>> 8, 0x3f);
+        comps[2] = (byte) Math.min(r * colors[2][0] + g * colors[2][1] + b * colors[2][2] >>> 8, 0x1f);
         return comps;
     }
 
     public short mix(short color) {
-        // red
-        byte r = (byte) (((color >>> 11) & 0x1F));
-        // green
-        byte g = (byte) (((color >>> 5) & 0x3f));
-        // blue
-        byte b = (byte) ((color & 0x1F));
-        // mix
+        byte r = (byte) (color >>> 11 & 0x1F);
+        byte g = (byte) (color >>> 5 & 0x3f);
+        byte b = (byte) (color & 0x1F);
         byte[] rgb = this.mix(r, g, b);
-        return (short) ((rgb[0] << 11) | (rgb[1] << 5) | rgb[2]);
+        return (short) (rgb[0] << 11 | rgb[1] << 5 | rgb[2]);
     }
 }

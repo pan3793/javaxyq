@@ -9,11 +9,13 @@ package com.javaxyq.action;
 
 import com.javaxyq.event.ActionEvent;
 
+import javax.swing.*;
+
 /**
  * @author 龚德伟
  * @history 2008-6-9 龚德伟 新建
  */
-public abstract class BaseAction extends javax.swing.AbstractAction {
+public abstract class BaseAction extends AbstractAction {
 
     public abstract void doAction(ActionEvent e);
 

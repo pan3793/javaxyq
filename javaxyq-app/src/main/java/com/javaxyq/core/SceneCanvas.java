@@ -3,16 +3,16 @@
  */
 package com.javaxyq.core;
 
-import com.javaxyq.TileMap;
+import open.xyq.core.ui.TileMap;
 import com.javaxyq.action.DefaultTalkAction;
-import com.javaxyq.algorithm.AStar;
+import open.xyq.core.alg.AStar;
 import com.javaxyq.data.SceneNpc;
 import com.javaxyq.data.SceneTeleporter;
 import com.javaxyq.event.*;
 import com.javaxyq.io.CacheManager;
 import com.javaxyq.model.Task;
-import com.javaxyq.TileMapProvider;
-import com.javaxyq.search.SearchUtils;
+import open.xyq.core.fmt.map.TileMapProvider;
+import open.xyq.core.alg.SearchUtils;
 import com.javaxyq.task.TaskManager;
 import com.javaxyq.trigger.JumpTrigger;
 import com.javaxyq.trigger.Trigger;
@@ -20,7 +20,7 @@ import com.javaxyq.widget.Cursor;
 import com.javaxyq.widget.*;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.Env;
-import open.xyq.core.config.MapConfig;
+import open.xyq.core.cfg.MapConfig;
 import open.xyq.core.util.SysUtil;
 
 import java.awt.*;
@@ -729,7 +729,6 @@ public class SceneCanvas extends Canvas {
             }
             // 内存使用量
             drawDebug(g);
-            drawDownloading(g);
         } catch (Exception e) {
             log.warn("Canvas 绘制失败", e);
         }
@@ -830,7 +829,7 @@ public class SceneCanvas extends Canvas {
 
     public TileMap getMap(String id) {
 
-        TileMapProvider tileMapProvider = new TileMapProvider(getDataManager());
+        TileMapProvider tileMapProvider = new TileMapProvider();
         TileMap m = tileMapProvider.getResource(id);
 
         m.setAlpha(1.0f);

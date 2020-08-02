@@ -1,8 +1,9 @@
 package com.javaxyq.widget;
 
+import open.xyq.core.AbstractWidget;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 
 /**
  * 精灵图片控件(带状态的)

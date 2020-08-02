@@ -16,10 +16,10 @@ import java.io.Serializable;
  * @history 2008-7-6 龚德伟
  */
 public interface FileObject extends Comparable<FileObject>, Serializable {
-    String BMP_FILE = "bmp";
+    String DIRECTORY = "directory";
     String MIDI_FILE = "midi";
+    String BMP_FILE = "bmp";
     String GIF_FILE = "gif";
-    String TGA_RLE_FILE = "tga(rle)";
     String TGA_FILE = "tga";
     String PNG_FILE = "png";
     String MP3_FILE = "mp3";
@@ -27,9 +27,9 @@ public interface FileObject extends Comparable<FileObject>, Serializable {
     String JPG_FILE = "jpg";
     String TCP_FILE = "tca/tcp";
     String WDF_FILE = "wdf";
-    String UNKNOWN_FILE = "unknown";
-    String DIRECTORY = "directory";
     String MAP_FILE = "map";
+    String TGA_RLE_FILE = "tga(rle)";
+    String UNKNOWN_FILE = "unknown";
 
     boolean isDirectory();
 

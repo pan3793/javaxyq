@@ -55,18 +55,18 @@ project(":javaxyq-app") {
 project(":javaxyq-common") {
     dependencies {
         compile fileTree(dir: "lib", include: "*.jar")
-
         compile project(":open-xyq-core")
-        compile "org.slf4j:slf4j-api:$slf4j_version"
-        compile "org.springframework:spring-core:$spring_version"
+
         compile "commons-beanutils:commons-beanutils-core:$beanutils_version"
         compile "commons-dbutils:commons-dbutils:$dbutils_version"
         compile "org.apache.commons:commons-jexl:$jexl_version"
-        compile "com.zaxxer:HikariCP:$hikari_version"
         compile "org.clojars.automata:jl:$automata_version"
-        compile "org.xerial:sqlite-jdbc:$sqlite_jdbc_version"
         compile "com.jidesoft:jide-components:$jide_version"
+        compile "org.slf4j:slf4j-api:$slf4j_version"
+        compile "org.springframework:spring-core:$spring_version"
         compile "com.typesafe:config:$typesafe_config_version"
+        compile "org.xerial:sqlite-jdbc:$sqlite_jdbc_version"
+        compile "com.zaxxer:HikariCP:$hikari_version"
     }
 }
 
@@ -89,7 +89,6 @@ project(":javaxyq-maker") {
 project(":javaxyq-resource-manager") {
     dependencies {
         compile fileTree(dir: "lib", include: "*.jar")
-
         compile project(":javaxyq-common")
 
         compile "ch.qos.logback:logback-classic:$logback_version"
@@ -98,7 +97,6 @@ project(":javaxyq-resource-manager") {
 
 project(":mxxy") {
     dependencies {
-
         compile project(":open-xyq-core")
 
         compile "org.clojars.automata:jl:$jl_version"
@@ -124,11 +122,6 @@ project(":open-xyq-core") {
         compile "org.codehaus.groovy:groovy-swing:$groovy_version"
         compile "org.codehaus.groovy:groovy-xml:$groovy_version"
         compile "com.google.code.findbugs:jsr305:$jsr_305_version"
-
-        testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"
-        testRuntimeOnly "ch.qos.logback:logback-core:$logback_version"
-        testRuntimeOnly "ch.qos.logback:logback-classic:$logback_version"
     }
 }
 
@@ -137,14 +130,9 @@ project(":open-xyq-tool") {
         compile project(":open-xyq-core")
 
         compile "ch.qos.logback:logback-classic:$logback_version"
+        compile "com.github.almasb:fxgl:$fxgl_verson"
         compile "org.jdom:jdom:$jdom_version"
         compile "org.slf4j:slf4j-api:$slf4j_version"
-        compile "com.github.almasb:fxgl:$fxgl_verson"
-
-        testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"
-        testRuntimeOnly "ch.qos.logback:logback-core:$logback_version"
-        testRuntimeOnly "ch.qos.logback:logback-classic:$logback_version"
     }
 }
 
@@ -153,13 +141,8 @@ project(":was-tools") {
         compile project(":open-xyq-core")
 
         compile "ch.qos.logback:logback-classic:$logback_version"
+        compile "com.github.almasb:fxgl-core:11.9"
         compile "org.jdom:jdom:$jdom_version"
         compile "org.slf4j:slf4j-api:$slf4j_version"
-        compile "com.github.almasb:fxgl-core:11.9"
-
-        testImplementation "org.junit.jupiter:junit-jupiter-api:$jupiter_version"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$jupiter_version"
-        testRuntimeOnly "ch.qos.logback:logback-core:$logback_version"
-        testRuntimeOnly "ch.qos.logback:logback-classic:$logback_version"
     }
 }

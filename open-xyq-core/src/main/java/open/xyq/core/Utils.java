@@ -27,6 +27,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.FontUIResource;
 
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.ui.ExampleFileFilter;
 
 @Slf4j
 public class Utils {
@@ -129,24 +130,6 @@ public class Utils {
 
     public static File showSaveDialog(Component parent, String title, FileFilter filter) {
         return showSaveDialog(parent, title, filter, null);
-    }
-
-    public static byte[] loadJarFile(String filename) throws IOException {
-        byte[] buf;
-        InputStream is = Utils.class.getResourceAsStream(filename);
-        if (is == null) {
-            if (filename.startsWith("/")) {
-                filename = filename.substring(1);
-            }
-            is = new FileInputStream(filename);
-        }
-        buf = new byte[is.available()];
-        int a = 0, count = 0;
-        while (is.available() > 0) {
-            a = is.read(buf, count, is.available());
-            count += a;
-        }
-        return buf;
     }
 
     /**
@@ -270,17 +253,6 @@ public class Utils {
         return loadImage(file.getAbsolutePath());
     }
 
-    public static boolean getPropertyAsBoolean(String key) {
-        return Boolean.parseBoolean(getProperty(key));
-    }
-
-    public static int getPropertyAsInt(String key) {
-        try {
-            return Integer.parseInt(getProperty(key));
-        } catch (Exception e) {
-        }
-        return 0;
-    }
 
     public static File showSaveDialog(Component parent, String title, FileFilter filter, String name) {
         File file = null;

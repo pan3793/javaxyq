@@ -1,9 +1,11 @@
-package com.mxxy.game.base;
+package com.mxxy.game;
 
 import java.awt.Point;
 import java.util.List;
 
 import com.mxxy.extendpackage.GamePager;
+import com.mxxy.game.base.Application;
+import com.mxxy.game.base.Panel;
 import com.mxxy.game.config.DataStoreManager;
 import com.mxxy.game.config.PropertiseConfigImpl;
 import com.mxxy.game.domain.PlayerVO;

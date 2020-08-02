@@ -1,4 +1,4 @@
-package com.javaxyq.algorithm;
+package open.xyq.core.alg;
 
 /**
  * @author soulnew@soulnew.com

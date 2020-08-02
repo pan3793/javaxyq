@@ -8,8 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-// TODO 遮挡图提取
 @Slf4j
+@Deprecated
 public class MapDecoder {
     private static final String MAGIC_HEADER_MAP = "0.1M";
     private static final String MAGIC_HEADER_JPEG = "GEPJ";

@@ -1,4 +1,4 @@
-package open.xyq.core;
+package open.xyq.core.ui;
 
 /*
  * @(#)ExampleFileFilter.java	1.8 04/07/26
@@ -40,14 +40,11 @@ package open.xyq.core;
  * @(#)ExampleFileFilter.java	1.8 04/07/26
  */
 
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.Hashtable;
 import java.util.regex.Pattern;
-
-import javax.swing.filechooser.*;
 
 /**
  * A convenience implementation of FileFilter that filters out all files except

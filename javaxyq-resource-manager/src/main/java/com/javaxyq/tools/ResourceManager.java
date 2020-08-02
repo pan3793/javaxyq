@@ -70,7 +70,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 
-import open.xyq.core.ExampleFileFilter;
+import open.xyq.core.ui.ExampleFileFilter;
 import com.javaxyq.util.UIUtils;
 import com.jidesoft.action.CommandBar;
 import com.jidesoft.dialog.JideOptionPane;

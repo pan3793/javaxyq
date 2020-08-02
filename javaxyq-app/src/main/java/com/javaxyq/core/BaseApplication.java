@@ -24,7 +24,7 @@ import com.javaxyq.task.TaskManager;
 import com.javaxyq.ui.*;
 import com.javaxyq.util.DBToolkit;
 import com.javaxyq.widget.Player;
-import com.javaxyq.TileMap;
+import open.xyq.core.ui.TileMap;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;

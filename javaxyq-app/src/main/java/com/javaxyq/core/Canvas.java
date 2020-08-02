@@ -1,7 +1,5 @@
 package com.javaxyq.core;
 
-import com.javaxyq.event.DownloadEvent;
-import com.javaxyq.event.DownloadListener;
 import com.javaxyq.ui.UIHelper;
 import com.javaxyq.util.MP3Player;
 import com.javaxyq.util.UIUtils;
@@ -22,7 +20,7 @@ import java.util.concurrent.locks.LockSupport;
 
 //DONE 添加动画的播放次数，如使用技能动画（只播放１次），鼠标点击地面效果
 @Slf4j
-public class Canvas extends JPanel implements GameCanvas, DownloadListener {
+public class Canvas extends JPanel implements GameCanvas {
 
     private class AnimatorThread extends Thread {
         /**
@@ -208,7 +206,6 @@ public class Canvas extends JPanel implements GameCanvas, DownloadListener {
             // draw fade
             drawFade(g);
             drawDebug(g);
-            drawDownloading(g);
         } catch (Exception e) {
             log.error("更新Canvas时失败！", e);
         }
@@ -480,11 +477,6 @@ public class Canvas extends JPanel implements GameCanvas, DownloadListener {
     private int lastDrawCount;
     private double fps;
 
-    private DownloadEvent downloadEvt;
-
-    private long downloadUpdate;
-    private long downloadMsgDelay = 1000;
-
     protected GameWindow window;
 
     protected void drawDebug(Graphics g) {
@@ -511,52 +503,6 @@ public class Canvas extends JPanel implements GameCanvas, DownloadListener {
         }
     }
 
-    protected void drawDownloading(Graphics g) {
-        if (this.downloadEvt != null && System.currentTimeMillis() - downloadUpdate < downloadMsgDelay) {
-            String msg = "";
-            String resourceName = this.downloadEvt.getResource();
-            int size = this.downloadEvt.getSize();
-            int received = this.downloadEvt.getReceived();
-            //if(size==0)size = -1;//保证除数不为0
-            //int percent = this.downloadEvt.getReceived()*100/size;
-            switch (this.downloadEvt.getId()) {
-                case DownloadEvent.DOWNLOAD_UPDATE:
-                    msg = String.format("正在下载  %s， 共%.2fKB，已下载%.2fKB ...", resourceName, size / 1024.0, received / 1024.0);
-                    break;
-                case DownloadEvent.DOWNLOAD_STARTED:
-                    msg = String.format("开始下载 %s ...", resourceName);
-                    break;
-                case DownloadEvent.DOWNLOAD_COMPLETED:
-                    //percent = 100;
-                    msg = String.format("下载完毕 %s .", resourceName);
-                    break;
-                case DownloadEvent.DOWNLOAD_INTERRUPTED:
-                    msg = String.format("下载失败 %s .", resourceName);
-                    break;
-
-                default:
-                    break;
-            }
-//			int rw = 400;
-//			int rh = 30;
-//			int rx = (getWidth()-rw)/2;
-//			int ry = (getHeight()-rh)/2;			
-            //提示信息
-            int x = 100, y = 40;
-            g.setColor(Color.GREEN);
-            g.drawString(msg, x, y);
-            //FontMetrics fm = g.getFontMetrics();
-            //g.drawString(msg ,rx +(rw-fm.stringWidth(msg))/2, ry-10);
-            //外框
-            //g.setColor(Color.DARK_GRAY);
-            //g.drawRect(rx, ry, rw, rh);
-            //进度
-            //g.setColor(Color.GREEN);
-            //g.fillRect(rx+2, ry+2, (int) ((rw-4)*percent/100.0), rh-4);
-
-        }
-    }
-
     protected String getMusic() {
         return null;
     }
@@ -573,30 +519,6 @@ public class Canvas extends JPanel implements GameCanvas, DownloadListener {
 
     public void stopMusic() {
         MP3Player.stopLoop();
-    }
-
-    @Override
-    public void downloadCompleted(DownloadEvent e) {
-        this.downloadEvt = e;
-        this.downloadUpdate = System.currentTimeMillis();
-    }
-
-    @Override
-    public void downloadInterrupted(DownloadEvent e) {
-        this.downloadEvt = e;
-        this.downloadUpdate = System.currentTimeMillis();
-    }
-
-    @Override
-    public void downloadStarted(DownloadEvent e) {
-        this.downloadEvt = e;
-        this.downloadUpdate = System.currentTimeMillis();
-    }
-
-    @Override
-    public void downloadUpdate(DownloadEvent e) {
-        this.downloadEvt = e;
-        this.downloadUpdate = System.currentTimeMillis();
     }
 
     @Override

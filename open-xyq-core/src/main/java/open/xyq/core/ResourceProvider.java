@@ -5,7 +5,7 @@
  * http://www.javaxyq.com
  */
 
-package com.javaxyq;
+package open.xyq.core;
 
 /**
  * @author 龚德伟

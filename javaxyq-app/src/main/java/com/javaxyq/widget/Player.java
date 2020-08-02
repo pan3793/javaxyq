@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.event.EventListenerList;
 
+import open.xyq.core.AbstractWidget;
 import open.xyq.core.Env;
 import com.javaxyq.core.Application;
 import com.javaxyq.core.SpriteFactory;
@@ -29,7 +30,7 @@ import com.javaxyq.event.EventTarget;
 import com.javaxyq.event.PlayerEvent;
 import com.javaxyq.event.PlayerListener;
 import com.javaxyq.model.PlayerVO;
-import com.javaxyq.search.Searcher;
+import open.xyq.core.alg.Searcher;
 import com.javaxyq.ui.FloatPanel;
 import com.javaxyq.util.Cheat;
 import com.javaxyq.util.MP3Player;

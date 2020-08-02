@@ -5,12 +5,13 @@
  * http://www.javaxyq.com
  */
 
-package com.javaxyq;
+package open.xyq.core.ui;
 
-import com.javaxyq.widget.AbstractWidget;
-import open.xyq.core.config.MapConfig;
+import open.xyq.core.AbstractWidget;
+import open.xyq.core.cfg.MapConfig;
 import open.xyq.core.fmt.map.MapUnit;
 import open.xyq.core.fmt.map.MaskUnit;
+import open.xyq.core.fmt.map.TileMapProvider;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -100,10 +101,10 @@ public class TileMap extends AbstractWidget {
     //mask图规则标签
     public void loadMask(int viewX, int viewY) {
         //初始化MASK遮掩图并输出
-        int firstTileX = pixelsToTilesw(viewX);
-        int lastTileX = pixelsToTilesw(viewX + MAP_BLOCK_WIDTH * 2);
-        int firstTileY = pixelsToTilesh(viewY);
-        int lastTileY = pixelsToTilesh(viewY + MAP_BLOCK_HEIGHT * 3);
+        int firstTileX = pixelsToTilesWidth(viewX);
+        int lastTileX = pixelsToTilesWidth(viewX + MAP_BLOCK_WIDTH * 2);
+        int firstTileY = pixelsToTilesHeight(viewY);
+        int lastTileY = pixelsToTilesHeight(viewY + MAP_BLOCK_HEIGHT * 3);
 
         lastTileX = Math.min(lastTileX, provider.getHBlockCount() - 1);
         lastTileY = Math.min(lastTileY, provider.getVBlockCount());
@@ -140,10 +141,10 @@ public class TileMap extends AbstractWidget {
             return;
         }
 
-        int firstTileX = pixelsToTilesw(keyx);
-        int lastTileX = pixelsToTilesw(keyx + width - 1);
-        int firstTileY = pixelsToTilesh(keyy);
-        int lastTileY = pixelsToTilesh(keyy + height - 1);
+        int firstTileX = pixelsToTilesWidth(keyx);
+        int lastTileX = pixelsToTilesWidth(keyx + width - 1);
+        int firstTileY = pixelsToTilesHeight(keyy);
+        int lastTileY = pixelsToTilesHeight(keyy + height - 1);
 
         //合并子地图并输出像素值；
         BufferedImage tempMaskImage = new BufferedImage(
@@ -164,25 +165,20 @@ public class TileMap extends AbstractWidget {
 
     // mask图规则标签
     private void writerRaster(BufferedImage tempMaskImage, WritableRaster tempMaskRaster,
-                              int num, int keyx, int keyy, int width, int height, int[] mask) {
+                              int num, int refH, int refV, int width, int height, int[] mask) {
         if (tileImageDes[num] != null)
             return;
+
         tileImageDes[num] = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-
         cm = tempMaskImage.getColorModel();
-
         des = new int[4];
         for (int h = 0; h < height; h++) {
             for (int w = 0; w < width; w++) {
-                data = tempMaskRaster.getDataElements(keyx % 320 + w, keyy % 240 + h, null);
+                data = tempMaskRaster.getDataElements(refH % 320 + w, refV % 240 + h, null);
                 int rgb = cm.getRGB(data);
-                int sr, sg, sb;
-                sr = (rgb & 0xFF0000) >> 16;
-                sg = (rgb & 0xFF00) >> 8;
-                sb = rgb & 0xFF;
-                des[0] = sr;
-                des[1] = sg;
-                des[2] = sb;
+                des[0] = (rgb & 0xFF0000) >> 16;
+                des[1] = (rgb & 0x00FF00) >> 8;
+                des[2] = (rgb & 0x0000FF);
                 if (mask[h * width + w] == 3) {
                     des[3] = 110;
                 } else if (mask[h * width + w] == 1) {
@@ -202,7 +198,7 @@ public class TileMap extends AbstractWidget {
 
     @Override
     protected void doDraw(Graphics2D g2, int x, int y, int width, int height) {
-        // 1.计算Rect落在的图块 
+        // 1.计算Rect落在的图块
         Point pFirstBlock = viewToBlock(x, y);
         // 2.计算第一块地图相对ViewRect的偏移量,并将Graphics偏移
         int dx = pFirstBlock.x * MAP_BLOCK_WIDTH - x;
@@ -211,10 +207,10 @@ public class TileMap extends AbstractWidget {
         // 3.计算X轴,Y轴方向需要的地图块数量
         int offsetX = x;
         int offsetY = y;
-        int firstTileX = pixelsToTilesw(offsetX);
-        int lastTileX = pixelsToTilesw(offsetX + MAP_BLOCK_WIDTH * 2);
-        int firstTileY = pixelsToTilesh(offsetY);
-        int lastTileY = pixelsToTilesh(offsetY + MAP_BLOCK_HEIGHT * 3);
+        int firstTileX = pixelsToTilesWidth(offsetX);
+        int lastTileX = pixelsToTilesWidth(offsetX + MAP_BLOCK_WIDTH * 2);
+        int firstTileY = pixelsToTilesHeight(offsetY);
+        int lastTileY = pixelsToTilesHeight(offsetY + MAP_BLOCK_HEIGHT * 3);
 
         lastTileX = Math.min(lastTileX, provider.getHBlockCount() - 1);
         lastTileY = Math.min(lastTileY, provider.getVBlockCount());
@@ -231,12 +227,27 @@ public class TileMap extends AbstractWidget {
         loadMask(x, y);
     }
 
+    @Override
+    public void dispose() {
+        this.provider.dispose();
+        this.provider = null;
+        for (SoftReference<Image>[] refs : this.blockTable)
+            for (SoftReference<Image> ref : refs)
+                ref.clear();
+        this.blockTable = null;
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        return true;
+    }
+
     /**
      * 根据MASK前后数据关系
-     * 判断是否drawmask
+     * 判断是否 drawmask
      */
     public void drawMask(int playerRefX, int playerRefY, int playerWeight, int playerHeight, int pcoordx, int pcoordy, Graphics g, int viewx, int viewy, int offsetX, int offsetY) {
-        // 1.计算Rect落在的图块 
+        // 1.计算Rect落在的图块
         /* Point pFirstBlock = viewToBlock(x, y);
         // 2.计算第一块地图相对ViewRect的偏移量,并将Graphics偏移
         int dx = pFirstBlock.x * MAP_BLOCK_WIDTH - x;
@@ -259,10 +270,10 @@ public class TileMap extends AbstractWidget {
 
         int offsetx = viewx;
         int offsety = viewy;
-        int firstTileX = pixelsToTilesw(offsetx);
-        int lastTileX = pixelsToTilesw(offsetx + MAP_BLOCK_WIDTH * 2);
-        int firstTileY = pixelsToTilesh(offsety);
-        int lastTileY = pixelsToTilesh(offsety + MAP_BLOCK_HEIGHT * 3);
+        int firstTileX = pixelsToTilesWidth(offsetx);
+        int lastTileX = pixelsToTilesWidth(offsetx + MAP_BLOCK_WIDTH * 2);
+        int firstTileY = pixelsToTilesHeight(offsety);
+        int lastTileY = pixelsToTilesHeight(offsety + MAP_BLOCK_HEIGHT * 3);
 
         lastTileX = Math.min(lastTileX, provider.getHBlockCount() - 1);
         lastTileY = Math.min(lastTileY, provider.getVBlockCount());
@@ -349,8 +360,7 @@ public class TileMap extends AbstractWidget {
                         }
                     }
                     if (bDrawMask) {
-                        g.drawImage(this.tileImageDes[maskIndex], maskUnit.getX() - viewx,
-                                maskUnit.getY() - viewy, null);
+                        g.drawImage(this.tileImageDes[maskIndex], maskUnit.getX() - viewx, maskUnit.getY() - viewy, null);
                     }
                 }
             }
@@ -362,7 +372,7 @@ public class TileMap extends AbstractWidget {
      * 预加载此区域的地图块
      */
     public void prepare(int x, int y, int width, int height) {
-        // 1.计算Rect落在的图块 
+        // 1.计算Rect落在的图块
         Point pFirstBlock = viewToBlock(x, y);
         // 2.计算第一块地图相对ViewRect的偏移量,并将Graphics偏移
         int dx = pFirstBlock.x * MAP_BLOCK_WIDTH - x;
@@ -400,7 +410,7 @@ public class TileMap extends AbstractWidget {
         // 如果此地图块还没加载,则取地图块数据并生成图像
         // 如果GC由于低内存,已释放image,需要重新装载
         if (reference == null || reference.get() == null) {
-            reference = new SoftReference<Image>(provider.getBlockImage(x, y));
+            reference = new SoftReference<>(provider.getBlockImage(x, y));
             this.blockTable[x][y] = reference;
         }
         this.checkTable();
@@ -423,20 +433,19 @@ public class TileMap extends AbstractWidget {
         vBlockCount = blockCount;
     }
 
-    public int tileswToPixels(int numTiles) {
+    public int tilesWidthToPixels(int numTiles) {
         return numTiles * MAP_BLOCK_WIDTH;
     }
 
-    public int pixelsToTilesw(int pixelCoord) {
+    public int pixelsToTilesWidth(int pixelCoord) {
         return pixelCoord / MAP_BLOCK_WIDTH;
-
     }
 
-    public int tileshToPixels(int numTiles) {
+    public int tilesHeightToPixels(int numTiles) {
         return numTiles * MAP_BLOCK_HEIGHT;
     }
 
-    public int pixelsToTilesh(int pixelCoord) {
+    public int pixelsToTilesHeight(int pixelCoord) {
         return pixelCoord / MAP_BLOCK_HEIGHT;
     }
 
@@ -472,27 +481,12 @@ public class TileMap extends AbstractWidget {
         this.height = height;
     }
 
-    @Override
-    public void dispose() {
-        this.provider.dispose();
-        this.provider = null;
-        for (SoftReference<Image>[] refs : this.blockTable)
-            for (SoftReference<Image> ref : refs)
-                ref.clear();
-        this.blockTable = null;
-    }
-
     public MapConfig getConfig() {
         return config;
     }
 
     public void setConfig(MapConfig config) {
         this.config = config;
-    }
-
-    @Override
-    public boolean contains(int x, int y) {
-        return true;
     }
 
     public byte[][] getCellData() {

@@ -6,7 +6,7 @@
 
  */
 
-package com.javaxyq.algorithm;
+package open.xyq.core.alg;
 
 /**
  * @author soulnew@soulnew.com
@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.javaxyq.search.Searcher;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

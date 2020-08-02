@@ -7,22 +7,14 @@
  */
 package com.javaxyq.io;
 
-import java.io.BufferedOutputStream;
+import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.util.IoUtil;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-
-import javax.swing.SwingUtilities;
-
-import com.javaxyq.event.DownloadEvent;
-import com.javaxyq.event.DownloadListener;
-import open.xyq.core.util.IoUtil;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 缓存管理器
@@ -39,7 +31,6 @@ public class CacheManager {
 
     private static final CacheManager instance = new CacheManager();
 
-    private final ArrayList<DownloadListener> listeners = new ArrayList<>();
     private String cacheBase;
     private URL documentBase;
 
@@ -55,63 +46,6 @@ public class CacheManager {
             }
         }
         return cacheBase;
-    }
-
-    public void setCacheBase(String cacheBase) {
-        this.cacheBase = cacheBase;
-    }
-
-    public URL getDocumentBase() {
-        return documentBase;
-    }
-
-    public void setDocumentBase(URL documentBase) {
-        this.documentBase = documentBase;
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param filename
-     * @param url
-     * @return
-     */
-    private File download(String filename, URL url) {
-        int size = -1;
-        int received = 0;
-        try {
-            fireDownloadStarted(filename);
-            File file = createFile(filename);
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            log.info("下载资源: {}, url={}", filename, url);
-            // BufferedInputStream bis = new
-            // BufferedInputStream(url.openStream());
-            InputStream bis = url.openStream();
-            byte[] buf = new byte[1024];
-            int count = 0;
-            long lastUpdate = 0;
-            size = bis.available();
-            while ((count = bis.read(buf)) != -1) {
-                bos.write(buf, 0, count);
-                received += count;
-                long now = System.currentTimeMillis();
-                if (now - lastUpdate > 500) {
-                    fireDownloadUpdate(filename, size, received);
-                    lastUpdate = now;
-                }
-            }
-            bos.close();
-            log.info("资源下载完毕: {}", filename);
-            fireDownloadCompleted(filename);
-            return file;
-        } catch (IOException e) {
-            log.error("下载资源失败: {}, error={}", filename, e.getMessage());
-            fireDownloadInterrupted(filename);
-            if (!(e instanceof FileNotFoundException)) {
-                log.error("", e);
-            }
-        }
-        return null;
     }
 
     /**
@@ -140,24 +74,6 @@ public class CacheManager {
             log.error("failed to load file: {}", filename);
             return null;
         }
-//		if (documentBase == null) {
-//			file = new File(filename);
-//			return file;
-//		}
-//		try {
-//			file = new File(cacheBase, filename);
-//			if (!file.exists() || file.length() == 0) {
-//				URL url = new URL(documentBase, filename);
-//				file = download(filename, url);
-//			}
-//		} catch (MalformedURLException e) {
-//			log.info("资源URL格式不正确：" + filename);
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			log.info("读取文件失败：" + filename);
-//			e.printStackTrace();
-//		}
-//		return file;
     }
 
     public InputStream getResourceAsStream(String path) throws IOException {
@@ -166,49 +82,6 @@ public class CacheManager {
             return new FileInputStream(file);
         }
         return null;
-    }
-
-    public void addDownloadListener(DownloadListener listener) {
-        listeners.add(listener);
-    }
-
-    public void removeDownloadListener(DownloadListener listener) {
-        listeners.remove(listener);
-    }
-
-    public void removeAllDownloadListeners() {
-        listeners.clear();
-    }
-
-    private void fireDownloadStarted(String resource) {
-        DownloadEvent e = new DownloadEvent(this, DownloadEvent.DOWNLOAD_STARTED, resource);
-        for (DownloadListener listener : listeners) {
-            listener.downloadStarted(e);
-        }
-    }
-
-    private void fireDownloadCompleted(String resource) {
-        DownloadEvent e = new DownloadEvent(this, DownloadEvent.DOWNLOAD_COMPLETED, resource);
-        for (DownloadListener listener : listeners) {
-            listener.downloadCompleted(e);
-        }
-    }
-
-    private void fireDownloadInterrupted(String resource) {
-        DownloadEvent e = new DownloadEvent(this, DownloadEvent.DOWNLOAD_INTERRUPTED, resource);
-        for (DownloadListener listener : listeners) {
-            listener.downloadInterrupted(e);
-        }
-    }
-
-    private void fireDownloadUpdate(String resource, int size, int received) {
-        final DownloadEvent event = new DownloadEvent(this, DownloadEvent.DOWNLOAD_UPDATE, resource, size, received);
-        Runnable updateAction = () -> {
-            for (DownloadListener listener : listeners) {
-                listener.downloadUpdate(event);
-            }
-        };
-        SwingUtilities.invokeLater(updateAction);
     }
 
     public void deleteFile(String filename) {

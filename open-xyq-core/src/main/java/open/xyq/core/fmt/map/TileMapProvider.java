@@ -5,26 +5,22 @@
  * http://www.javaxyq.com
  */
 
-package com.javaxyq;
+package open.xyq.core.fmt.map;
 
-import com.javaxyq.core.DataManager;
-import com.javaxyq.io.CacheManager;
-import com.javaxyq.resources.MapProvider;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.config.MapConfig;
-import open.xyq.core.fmt.MiniLZO;
-import open.xyq.core.fmt.map.MapUnit;
-import open.xyq.core.fmt.map.MaskUnit;
+import open.xyq.core.MapProvider;
+import open.xyq.core.ui.TileMap;
+import open.xyq.core.cfg.MapConfig;
+import open.xyq.core.alg.MiniLZO;
 import open.xyq.core.io.RichRandomAccessFile;
-import open.xyq.core.store.Scene;
+import open.xyq.core.util.IoUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -38,7 +34,6 @@ public class TileMapProvider implements MapProvider {
     private static final String MAGIC_HEADER_MAP = "0.1M";
     private static final String MAGIC_HEADER_JPEG = "GEPJ";
 
-    private final DataManager dataManager;
     private RichRandomAccessFile raf;
 
     @Getter // 地图宽度
@@ -56,10 +51,6 @@ public class TileMapProvider implements MapProvider {
     // mask偏移量
     private int[] maskOffsets;
 
-    public TileMapProvider(DataManager dataManager) {
-        this.dataManager = dataManager;
-    }
-
     @Override
     public String getVersion() {
         return "1.0";
@@ -74,20 +65,15 @@ public class TileMapProvider implements MapProvider {
     public TileMap getResource(String sceneId) {
         if (raf != null) // 场景切换，释放资源
             dispose();
-
-        Scene scene = dataManager.findScene(Integer.parseInt(sceneId));
-        if (scene != null) {
-            try {
-                String path = String.format("scene/%s.map", sceneId);
-                String music = String.format("music/%s.mp3", sceneId);
-                MapConfig cfg = new MapConfig(sceneId, scene.getName(), path, music);
-                File file = CacheManager.getInstance().getFile(cfg.getPath());
-                raf = new RichRandomAccessFile(file, "r");
-                decodeMetadata();
-                return new TileMap(this, cfg);
-            } catch (Exception e) {
-                log.error("", e);
-            }
+        try {
+            String path = String.format("scene/%s.map", sceneId);
+            String music = String.format("music/%s.mp3", sceneId);
+            MapConfig cfg = new MapConfig(sceneId, "scene_name", path, music); // TODO
+            raf = new RichRandomAccessFile(IoUtil.loadFile(cfg.getPath()), "r");
+            decodeMetadata();
+            return new TileMap(this, cfg);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return null;
     }

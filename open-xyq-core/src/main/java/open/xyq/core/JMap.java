@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * TODO 多线程加载,paint不等待
  */
 @Slf4j
+@Deprecated
 public class JMap extends JComponent {
 
     private static final long serialVersionUID = 1L;
@@ -71,10 +72,6 @@ public class JMap extends JComponent {
             }
         }
         g.dispose();
-    }
-
-    protected void drawCell(Graphics g) {
-
     }
 
     /**

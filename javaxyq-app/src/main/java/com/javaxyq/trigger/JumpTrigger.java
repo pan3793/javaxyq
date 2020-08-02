@@ -15,7 +15,7 @@ import com.javaxyq.core.SpriteFactory;
 import com.javaxyq.data.SceneTeleporter;
 import com.javaxyq.widget.Player;
 import com.javaxyq.widget.Sprite;
-import com.javaxyq.widget.Widget;
+import open.xyq.core.ui.Widget;
 
 /**
  * 场景跳转触发器

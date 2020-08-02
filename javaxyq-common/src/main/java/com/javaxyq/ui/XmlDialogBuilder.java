@@ -1,6 +1,6 @@
 package com.javaxyq.ui;
 
-import open.xyq.core.config.ImageConfig;
+import open.xyq.core.cfg.ImageConfig;
 import com.javaxyq.core.DefaultScript;
 import com.javaxyq.core.DialogBuilder;
 import com.javaxyq.core.ScriptEngine;

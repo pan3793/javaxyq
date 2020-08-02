@@ -24,7 +24,7 @@
    Copyright (C) 2010 Mahadevan Gorti Surya Srinivasa <sgorti@gmail.com>
  */
 
-package open.xyq.core.fmt;
+package open.xyq.core.alg;
 
 
 /**
