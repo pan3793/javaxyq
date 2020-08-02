@@ -1,0 +1,11 @@
+[ 1- 4] 0.1M   --magic
+[ 5- 8] width  --总宽度，水平方向图块个数 h_block_count=ceil(width/320)
+[ 9-12] height --总高度，垂直方向图块个数 v_block_count=ceil(height/240)
+图块偏移量，每个占用 4 bytes，共 h_block_count * v_block_count * 4 bytes
+head_size, 4 bytes
+掩码数量 mask_count，4 bytes
+掩码偏移量，每个占用 4 bytes，共 mask_count * 4 bytes
+
+图块使用略微修改的jpeg编码
+    [1-4] GEPJ --magic
+    找到第一个 OxFFDA 0009 03 序列后，将其中的 0x09 替换为 0x0C，并将其后的 0xFF 替换为 0xFF00
