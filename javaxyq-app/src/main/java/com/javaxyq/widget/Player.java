@@ -34,7 +34,7 @@ import com.javaxyq.ui.FloatPanel;
 import com.javaxyq.util.Cheat;
 import com.javaxyq.util.MP3Player;
 import com.javaxyq.util.UIUtils;
-import open.xyq.core.fmt.WasDecoder;
+import open.xyq.core.fmt.was.WasDecoder;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -18,7 +18,7 @@ import javax.swing.ActionMap;
 import javax.swing.JPanel;
 import javax.swing.event.EventListenerList;
 
-import com.javaxyq.config.ImageConfig;
+import open.xyq.core.config.ImageConfig;
 import com.javaxyq.core.DialogFactory;
 import com.javaxyq.core.ResourceStore;
 import com.javaxyq.event.ActionEvent;

@@ -416,8 +416,7 @@ public class GamePanel extends AbstactPanel implements ISetOnListener<GamePaneLi
 				long nowtime = System.currentTimeMillis();
 				Long lastPatrolTime = (Long) Constant.props.get(Constant.LAST_PATROL_TIME);
 				if (lastPatrolTime != null && nowtime - lastPatrolTime > 10000L) {
-					if (random.nextInt(100) < 5) {
-
+					if (random.nextInt(10000000) < 1) {
 						enterTheWar();
 					}
 				}

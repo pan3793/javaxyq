@@ -1,5 +1,7 @@
 package com.javaxyq.data;
 
+import open.xyq.core.store.Scene;
+
 import java.sql.SQLException;
 import java.util.List;
 

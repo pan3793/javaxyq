@@ -26,8 +26,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
-import open.xyq.core.fmt.Section;
-import open.xyq.core.fmt.WasDecoder;
+import open.xyq.core.fmt.was.Section;
+import open.xyq.core.fmt.was.WasDecoder;
 
 /**
  * This code was edited or generated using CloudGarden's Jigloo SWT/Swing GUI Builder, which is free

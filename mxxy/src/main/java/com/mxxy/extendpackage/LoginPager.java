@@ -75,7 +75,7 @@ final public class LoginPager extends AbstractPanelHandler<LoginModler> {
 
 	@Override
 	protected String setConfigFileName() {
-		return "save/logindate.propertise";
+		return "save/logindata.properties";
 	}
 
 	private void checkUeser() {

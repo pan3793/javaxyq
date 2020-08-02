@@ -33,7 +33,8 @@ import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
 import com.javaxyq.ui.CenterLayout;
-import com.javaxyq.util.Utils;
+import open.xyq.core.JMap;
+import open.xyq.core.Utils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -291,8 +292,6 @@ public class MasksTool extends javax.swing.JFrame {
 	
 	/**
 	 * 取消标记
-	 * @param x
-	 * @param y
 	 */
 	private void unmark(int x, int y) {
 		int sx = x / CELL_WIDTH;

@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
+import open.xyq.core.fmt.FileObject;
+import open.xyq.core.fmt.wdf.WdfFileNode;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationActionMap;

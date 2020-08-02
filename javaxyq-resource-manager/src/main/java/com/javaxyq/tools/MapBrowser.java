@@ -1,8 +1,10 @@
 package com.javaxyq.tools;
 
 import com.javaxyq.ui.CenterLayout;
-import open.xyq.core.fmt.MapDecoder;
-import com.javaxyq.util.Utils;
+import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.JMap;
+import open.xyq.core.Utils;
+import open.xyq.core.fmt.map.MapDecoder;
 import open.xyq.core.util.PlatformUtil;
 
 import javax.imageio.ImageIO;
@@ -15,6 +17,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Formatter;
 
 /**
@@ -24,7 +27,8 @@ import java.util.Formatter;
  * @history 2007-01-23 新建
  * @history 2008-03-09 增加导出整张地图的功能
  */
-public class MapBrowser extends javax.swing.JFrame implements WindowListener {
+@Slf4j
+public class MapBrowser extends JFrame implements WindowListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,27 +75,7 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
         super();
         Utils.loadSettings(SETTINGS_FILENAME);
         initGUI();
-        showAnnouncement();
         addWindowListener(this);
-    }
-
-    private void showAnnouncement() {
-        String strText = "请仔细阅读以下使用许可。\n如果您不同意以下任何一点，请立即停止使用此软件。\n\n" +
-                "\t1、禁止商业用途，仅用于个人研究；\n" +
-                "\t2、若产生任何侵权行为，使用者自负责任；\n" +
-                "\t3、未经许可严禁对本工具进行任何形式的转载、出版及其它的传播行为。\n\n";
-        String oldYesText = UIManager.getString("OptionPane.yesButtonText");
-        String oldNoText = UIManager.getString("OptionPane.noButtonText");
-        UIManager.put("OptionPane.yesButtonText", "我同意");
-        UIManager.put("OptionPane.noButtonText", "退出");
-
-        int iValue = JOptionPane.showConfirmDialog(this, strText, "许可协议",
-                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (iValue != JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
-        UIManager.put("OptionPane.yesButtonText", oldYesText);
-        UIManager.put("OptionPane.noButtonText", oldNoText);
     }
 
     private void initGUI() {
@@ -428,8 +412,7 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
      * 整张地图导出
      */
     private void exportMap() {
-        File saveFile = null;
-        saveFile = Utils.showSaveDialog(this, "导出地图", Utils.JPEG_FILTER, filename);
+        File saveFile = Utils.showSaveDialog(this, "导出地图", Utils.JPEG_FILTER, filename);
         if (saveFile != null) {
             String filename = saveFile.getAbsolutePath().toLowerCase();
             if (!filename.endsWith(".jpg") && !filename.endsWith(".jpeg")) {
@@ -445,7 +428,8 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
             } catch (Exception ex) {
                 System.err.println("导出地图失败:" + ex.getMessage());
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(MapBrowser.this, "导出地图失败:" + ex.getMessage(), "错误",
+                JOptionPane.showMessageDialog(MapBrowser.this,
+                        "导出地图失败:" + ex.getMessage(), "错误",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -455,29 +439,25 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
      * 分块导出
      */
     private void exportBlocks() {
-        File saveFile = null;
-        saveFile = Utils.showSaveDialog(this, "导出地图", Utils.JPEG_FILTER, filename);
+        File saveFile = Utils.showSaveDialog(this, "导出地图", Utils.JPEG_FILTER, filename);
         if (saveFile != null) {
             try {
-                FileOutputStream out = null;
                 MapDecoder decoder = this.map.getDecoder();
-                int hCount = decoder.getHorSegmentCount();
-                int vCount = decoder.getVerSegmentCount();
-                byte[] data = null;
+                int hCount = decoder.getHBlockCount();
+                int vCount = decoder.getVBlockCount();
                 for (int h = 0; h < hCount; h++) {
                     for (int v = 0; v < vCount; v++) {
-                        data = decoder.getJpegData(h, v);
-                        Formatter formatter = new Formatter();
-                        formatter.format("%s_%02d_%02d.jpg", filename, v + 1, h + 1);
-                        out = new FileOutputStream(formatter.toString());
-                        out.write(data);
-                        out.close();
+                        String blockFileName = String.format("%s_%02d_%02d.jpg", filename, v + 1, h + 1);
+                        try (OutputStream out = new FileOutputStream(blockFileName)) {
+                            byte[] data = decoder.getJpegData(h, v);
+                            out.write(data);
+                        }
                     }
                 }
             } catch (Exception ex) {
-                System.err.println("导出地图失败:" + ex.getMessage());
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(MapBrowser.this, "导出地图失败:" + ex.getMessage(), "错误",
+                log.error("导出地图失败", ex);
+                JOptionPane.showMessageDialog(MapBrowser.this,
+                        "导出地图失败:" + ex.getMessage(), "错误",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -508,8 +488,10 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
     private void showIntroduction() {
         final String url = "http://github.com/";
         String msg =
-                "Ctrl+O : 打开地图文件\n" + "Ctrl+S : 导出当前区域的地图图像\n" + "支持鼠标拖动地图\n"
-                        + "点击右下角文字标签可以精确设置可视区域大小\n\n" + "更多信息，请访问以下网址：\n";
+                "Ctrl+O : 打开地图文件\n" +
+                        "Ctrl+S : 导出当前区域的地图图像\n" +
+                        "支持鼠标拖动地图\n" + "点击右下角文字标签可以精确设置可视区域大小\n\n" +
+                        "更多信息，请访问以下网址：\n";
         JLabel msgLabel = new JLabel(url);
         msgLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         msgLabel.setForeground(Color.BLUE);
@@ -522,7 +504,7 @@ public class MapBrowser extends javax.swing.JFrame implements WindowListener {
         msgLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                    PlatformUtil.openUrl(url);
+                PlatformUtil.openUrl(url);
             }
         });
         JOptionPane.showMessageDialog(MapBrowser.this, panel, "Help", JOptionPane.QUESTION_MESSAGE);

@@ -1,9 +1,6 @@
 package com.javaxyq.core;
 
 
-
-import com.javaxyq.event.PlayerListener;
-
 /**
  * 脚本管理器
  * @author gongdewei

@@ -2,7 +2,7 @@ package com.javaxyq.tools;
 
 import java.util.Comparator;
 
-import com.javaxyq.tools.WdfFileNode;
+import open.xyq.core.fmt.wdf.WdfFileNode;
 
 /**
  * 汉字拼音排序比较器

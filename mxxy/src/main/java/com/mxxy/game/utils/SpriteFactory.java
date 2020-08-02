@@ -12,6 +12,9 @@ import com.mxxy.game.sprite.Sprite;
 import com.mxxy.game.was.Toolkit;
 import com.mxxy.game.was.WASDecoder;
 import com.mxxy.game.widget.Animation;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.util.IoUtil;
 
 /**
  * 精灵工厂
@@ -130,18 +133,19 @@ public class SpriteFactory {
 		return null;
 	}
 
+	@SneakyThrows
 	public static Animation getXyjAnimation(String num) {
 		Animation anim = new Animation();
-		Icon ico = new ImageIcon("res/npcRes/" + num + "/1.png");
+		Icon ico = new ImageIcon(Toolkit.getResourceData("res/npcRes/" + num + "/1.png"));
 		int height = ico.getIconHeight();
 		int width = ico.getIconWidth();
 		anim.setHeight(height);
 		anim.setWidth(width);
-		File path = new File("res/npcRes/" + num);
+		File path = IoUtil.loadFile("res/npcRes/" + num);
 		String[] list = path.list();
 		int len = list.length + 1;
 		for (int i = 1; i < len; i++) {
-			anim.addFrame(new ImageIcon("res/npcRes/" + num + "/" + i + ".png").getImage(), 100L, 0, 0);
+			anim.addFrame(new ImageIcon(Toolkit.getResourceData("res/npcRes/" + num + "/" + i + ".png")).getImage(), 100L, 0, 0);
 		}
 		return anim;
 	}

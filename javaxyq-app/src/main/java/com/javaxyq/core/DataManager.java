@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.javaxyq.data.ItemInstance;
-import com.javaxyq.data.Scene;
+import open.xyq.core.store.Scene;
 import com.javaxyq.data.SceneNpc;
 import com.javaxyq.data.SceneTeleporter;
 import com.javaxyq.data.SkillMain;

@@ -1,6 +1,7 @@
 package com.javaxyq.core;
 
-import com.javaxyq.config.PlayerConfig;
+import open.xyq.core.store.Scene;
+import open.xyq.core.config.PlayerConfig;
 import com.javaxyq.data.*;
 import com.javaxyq.data.impl.*;
 import com.javaxyq.io.CacheManager;

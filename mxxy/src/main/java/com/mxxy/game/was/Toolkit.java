@@ -8,95 +8,93 @@ import java.io.InputStream;
 
 import com.mxxy.game.utils.FileUtils;
 import com.mxxy.game.widget.RichLabel;
+import open.xyq.core.util.IoUtil;
 
 public class Toolkit {
-	private static Toolkit instance = new Toolkit();
+    private static Toolkit instance = new Toolkit();
 
-	public static Toolkit getInstance() {
-		return instance;
-	}
+    public static Toolkit getInstance() {
+        return instance;
+    }
 
-	/**
-	 * 创建流
-	 * @param filename
-	 *            路径
-	 * @return
-	 */
-	public static InputStream getInputStream(String filename) {
-		InputStream is = Toolkit.class.getResourceAsStream(filename);
-		if (is == null) {
-			try {
-				is = new FileInputStream(FileUtils.getPath(filename));
-			} catch (FileNotFoundException e) {
-				System.out.println(e);
-				System.err.println("找不到文件");
-			}
-		}
-		return is;
-	}
+    /**
+     * 创建流
+     *
+     * @param filename 路径
+     * @return
+     */
+    public static InputStream getInputStream(String filename) {
+        try {
+            return IoUtil.loadResource(filename).getInputStream();
+        } catch (Exception e) {
+            System.out.println(e);
+            System.err.println("找不到文件");
+        }
+        return null;
+    }
 
-	public RichLabel createRichLabel(int x, int y, int width, int height, String text) {
-		RichLabel label = new RichLabel(text);
-		label.setLocation(x, y);
-		label.computeSize(width);
-		label.setSize(width, 100);
-		return label;
-	}
+    public RichLabel createRichLabel(int x, int y, int width, int height, String text) {
+        RichLabel label = new RichLabel(text);
+        label.setLocation(x, y);
+        label.computeSize(width);
+        label.setSize(width, 100);
+        return label;
+    }
 
-	/**
-	 * 读取字节到byte
-	 * 
-	 * @param filename
-	 * @return
-	 * @throws IOException
-	 */
-	public static byte[] getResourceData(String filename) throws IOException {
-		InputStream is = getInputStream(filename);
-		if (is == null) {
-			return null;
-		}
-		byte[] buf = new byte[is.available()];
-		int count = 0;
-		while (is.available() > 0) {
-			count += is.read(buf, count, is.available());
-		}
-		return buf;
-	}
+    /**
+     * 读取字节到byte
+     *
+     * @param filename
+     * @return
+     * @throws IOException
+     */
+    public static byte[] getResourceData(String filename) throws IOException {
+        InputStream is = getInputStream(filename);
+        if (is == null) {
+            return null;
+        }
+        byte[] buf = new byte[is.available()];
+        int count = 0;
+        while (is.available() > 0) {
+            count += is.read(buf, count, is.available());
+        }
+        return buf;
+    }
 
-	/**
-	 * 根据字节创建Image 对象
-	 * 
-	 * @param filename
-	 * @return Image
-	 */
-	public static Image createImageFromResource(String filename) {
-		byte[] data = null;
-		try {
-			data = getResourceData(filename);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (data == null) {
-			return null;
-		}
-		return java.awt.Toolkit.getDefaultToolkit().createImage(data);
-	}
+    /**
+     * 根据字节创建Image 对象
+     *
+     * @param filename
+     * @return Image
+     */
+    public static Image createImageFromResource(String filename) {
+        byte[] data = null;
+        try {
+            data = getResourceData(filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (data == null) {
+            return null;
+        }
+        return java.awt.Toolkit.getDefaultToolkit().createImage(data);
+    }
 
-	public static void sleep(long sleep) {
-		try {
-			Thread.sleep(sleep);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public static void sleep(long sleep) {
+        try {
+            Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	public static void sleep(int sleep) {
-		try {
-			Thread.sleep(sleep);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public static void sleep(int sleep) {
+        try {
+            Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

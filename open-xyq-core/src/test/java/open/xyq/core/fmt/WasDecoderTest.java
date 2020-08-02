@@ -1,6 +1,7 @@
 package open.xyq.core.fmt;
 
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.fmt.was.WasDecoder;
 import open.xyq.core.util.UiUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

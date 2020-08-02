@@ -13,7 +13,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.javaxyq.data.NonexistentEntityException;
 import com.javaxyq.data.PreexistingEntityException;
-import com.javaxyq.data.Scene;
+import open.xyq.core.store.Scene;
 import com.javaxyq.data.SceneDAO;
 import com.javaxyq.util.DBToolkit;
 import com.javaxyq.util.SmartBeanProcessor;

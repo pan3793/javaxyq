@@ -20,7 +20,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 
-import com.javaxyq.config.LabelConfig;
+import open.xyq.core.config.LabelConfig;
 import com.javaxyq.io.CacheManager;
 import com.javaxyq.model.Option;
 import com.javaxyq.ui.Label;

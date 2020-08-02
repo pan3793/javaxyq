@@ -8,7 +8,7 @@
 package com.javaxyq.core;
 
 
-import com.javaxyq.config.ImageConfig;
+import open.xyq.core.config.ImageConfig;
 import com.javaxyq.widget.Sprite;
 import com.javaxyq.widget.SpriteImage;
 

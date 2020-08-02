@@ -11,7 +11,7 @@ public class SysUtil {
         try {
             Thread.sleep(duration.toMillis());
         } catch (InterruptedException e) {
-            log.warn("interrupted");
+            log.info("interrupted");
         }
     }
 }

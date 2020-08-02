@@ -8,31 +8,29 @@ import com.mxxy.protocol.Message;
 
 public interface IClient {
 
-	public abstract void connect(String HostIp, int HostListenningPort);
+	void connect(String HostIp, int HostListenningPort);
 
-	public abstract void initialize() throws IOException;
+	void initialize() throws IOException;
 
-	public abstract void send(Message paramMessage) throws IOException;
+	void send(Message paramMessage) throws IOException;
 
-	public abstract void send(ByteBuffer bufOut) throws IOException;
+	void send(ByteBuffer bufOut) throws IOException;
 
-	public abstract boolean isThreadStart();
+	boolean isThreadStart();
 
 	/**
 	 * 开启接收线程
-	 * 
-	 * @throws InterruptedException
 	 */
-	public abstract void openReadThread() throws InterruptedException;
+	void openReadThread() throws InterruptedException;
 
 	/**
 	 * 关闭接收线程
 	 */
-	public abstract void closeReadThread();
+	void closeReadThread();
 
-	public abstract String getIp();
+	String getIp();
 
-	public abstract int getPort();
+	int getPort();
 
-	public abstract InetSocketAddress getInetSocketAddress();
+	InetSocketAddress getInetSocketAddress();
 }

@@ -2,16 +2,16 @@ package com.javaxyq.tools;
 
 import javax.swing.*;
 
+import open.xyq.core.fmt.wdf.WdfFile;
+import open.xyq.core.fmt.wdf.WdfFileNode;
 import com.javaxyq.util.HashUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;

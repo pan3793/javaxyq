@@ -31,6 +31,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.ListModel;
 
+import open.xyq.core.fmt.DefaultFileObject;
+import open.xyq.core.fmt.FileObject;
+import open.xyq.core.fmt.FileSystem;
+import open.xyq.core.fmt.wdf.WdfFileNode;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationActionMap;

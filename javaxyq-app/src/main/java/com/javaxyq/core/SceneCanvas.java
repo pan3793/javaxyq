@@ -3,39 +3,33 @@
  */
 package com.javaxyq.core;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import open.xyq.core.Env;
+import com.javaxyq.TileMap;
 import com.javaxyq.action.DefaultTalkAction;
-import com.javaxyq.config.MapConfig;
+import com.javaxyq.algorithm.AStar;
 import com.javaxyq.data.SceneNpc;
 import com.javaxyq.data.SceneTeleporter;
-import com.javaxyq.event.PlayerAdapter;
-import com.javaxyq.event.PlayerEvent;
-import com.javaxyq.event.PlayerListener;
-import com.javaxyq.event.SceneEvent;
-import com.javaxyq.event.SceneListener;
+import com.javaxyq.event.*;
 import com.javaxyq.io.CacheManager;
 import com.javaxyq.model.Task;
-import com.javaxyq.resources.DefaultTileMapProvider;
+import com.javaxyq.TileMapProvider;
 import com.javaxyq.search.SearchUtils;
 import com.javaxyq.task.TaskManager;
 import com.javaxyq.trigger.JumpTrigger;
 import com.javaxyq.trigger.Trigger;
 import com.javaxyq.widget.Cursor;
-import com.javaxyq.widget.Player;
-import com.javaxyq.widget.Sprite;
-import com.javaxyq.widget.SpriteImage;
-import com.javaxyq.widget.TileMap;
-import com.javaxyq.algorithm.AStar;
+import com.javaxyq.widget.*;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.Env;
+import open.xyq.core.config.MapConfig;
+import open.xyq.core.util.SysUtil;
+
+import java.awt.*;
+import java.io.File;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author dewitt
@@ -45,10 +39,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SceneCanvas extends Canvas {
 
-    /** 游戏地图 */
+    // 场景地图
     private TileMap map;
 
-    private final AStar searcher;
+    private final AStar searcher = new AStar();
 
     private final PlayerListener scenePlayerHandler = new ScenePlayerHandler();
 
@@ -56,12 +50,11 @@ public class SceneCanvas extends Canvas {
 
     private List<Trigger> triggerList;
 
-    /** 当前场景名称 */
+    // 当前场景名称
     private String sceneName;
 
-    /** 当前场景id */
+    // 当前场景id
     private String sceneId;
-
 
     private int sceneWidth;
 
@@ -72,27 +65,19 @@ public class SceneCanvas extends Canvas {
 
     private String musicfile;
 
-    private final ScriptEngine scriptEngine;
+    private final ScriptEngine scriptEngine = DefaultScript.getInstance();
 
     /**
      * 地图遮掩层及参数
      */
-    //private Image mapMask;
-    //private int tempviewX;
-    //private int tempviewY;
-    public boolean isloop = true;
-    public boolean maskupdateinit;
+    public boolean isLoop = true;
+    public boolean maskUpdateInit;
 
     /**
      * 创建场景画布实例
      */
     public SceneCanvas(int width, int height) {
         super(width, height);
-        scriptEngine = DefaultScript.getInstance();
-        searcher = new AStar();
-        // searcher = new OptimizeAStar();
-        // searcher = new Dijkstra();
-        // searcher = new BreadthFirstSearcher();
         Thread th1 = new MovementThread();
         th1.start();
     }
@@ -122,7 +107,7 @@ public class SceneCanvas extends Canvas {
                 try {
                     long t1, t2;
                     t1 = System.currentTimeMillis();
-                    map.drawMask(player, p.x + viewX, p.y + viewY, g, viewX, viewY, sx2, sy2);
+                    map.drawMask(player.getRefPixelX(), player.getRefPixelY(), player.getWidth(), player.getHeight(), p.x + viewX, p.y + viewY, g, viewX, viewY, sx2, sy2);
                     t2 = System.currentTimeMillis();
                     if (t2 - t1 > 5) {
                         log.debug("drawMask: " + (t2 - t1));
@@ -572,10 +557,7 @@ public class SceneCanvas extends Canvas {
         // 取消点击效果
         new Thread(() -> {
             while (effectSprite.isVisible()) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                }
+                SysUtil.sleep(Duration.ofMillis(500));
                 if (effectSprite.getSprite().getRepeat() == 0) {
                     effectSprite.setVisible(false);
                     break;
@@ -586,8 +568,6 @@ public class SceneCanvas extends Canvas {
 
     /**
      * draw click effect
-     *
-     * @param elapsedTime
      */
     private void drawClick(Graphics g, long elapsedTime) {
         // update click effection
@@ -609,7 +589,6 @@ public class SceneCanvas extends Canvas {
 
         public void run() {
             while (true) {
-                // System.out.println(this.getId()+" "+this.getName());
                 synchronized (Canvas.MOVEMENT_LOCK) {
                     long t1 = System.currentTimeMillis();
                     long currTime = System.currentTimeMillis();
@@ -624,11 +603,7 @@ public class SceneCanvas extends Canvas {
                     }
                     lastTime = currTime;
                 }
-                try {
-                    Thread.sleep(40);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                SysUtil.sleep(Duration.ofMillis(40));
             }
         }
     }
@@ -678,9 +653,6 @@ public class SceneCanvas extends Canvas {
         //TODO stop , adjusting viewport
     }
 
-    /**
-     * @param elapsedTime
-     */
     private void updateMovements(long elapsedTime) {
         Player p = getPlayer();
         if (p != null) {
@@ -712,8 +684,6 @@ public class SceneCanvas extends Canvas {
                 }
                 setViewPosition(vp.x + dx, vp.y + dy);
 
-//				Point newvp = getViewPosition();
-//				map.setArgtoMask(newvp.x, newvp.y);
             } else {
                 this.adjustViewport = false;
             }
@@ -724,14 +694,10 @@ public class SceneCanvas extends Canvas {
         if (g == null) {
             return;
         }
-        long t0, t1, t2, t3, t4, t5, t6, t7, tx;
-        t0 = System.currentTimeMillis();
         try {
             g.setColor(Color.BLACK);
             // 场景地图
             drawMap(g);
-//			t1 = System.currentTimeMillis();
-//			System.out.printf("drawMap cost: %s\n", (t1-t0));
 
             // 人物行走路线
             if (Env.debug) {
@@ -740,33 +706,21 @@ public class SceneCanvas extends Canvas {
             }
             // 场景跳转
             drawTrigger(g, elapsedTime);
-//			t2 = System.currentTimeMillis();
-//			System.out.printf("drawTrigger cost: %s\n", (t2-t1));
 
             // npcs
             drawNPC(g, elapsedTime);
-//			t3 = System.currentTimeMillis();
-//			System.out.printf("drawNPC cost: %s\n", (t3-t2));
 
             // 人物
             drawPlayer(g, elapsedTime);
-//			t4 = System.currentTimeMillis();
-//			System.out.printf("drawPlayer cost: %s\n", (t4-t3));
 
             // 地图掩码(mask)
             drawMask(g, elapsedTime);
-//			t5 = System.currentTimeMillis();
-//			System.out.printf("drawMask cost: %s\n", (t5-t4));
 
             // 鼠标点击效果
             this.drawClick(g, elapsedTime);
-//			t6 = System.currentTimeMillis();
-//			System.out.printf("drawClick cost: %s\n", (t6-t5));
 
             // 游戏UI控件
             drawComponents(g, elapsedTime);
-//			t7 = System.currentTimeMillis();
-//			System.out.printf("drawComponents cost: %s\n", (t7-t6));
 
             // 过渡效果：谈出淡入
             if (alpha > 0) {
@@ -776,12 +730,8 @@ public class SceneCanvas extends Canvas {
             // 内存使用量
             drawDebug(g);
             drawDownloading(g);
-
-            tx = System.currentTimeMillis();
-            //System.out.printf("SceneCanvas draw cost: %s\n", (tx-t0));
-
         } catch (Exception e) {
-            log.warn("更新Canvas时失败！", e);
+            log.warn("Canvas 绘制失败", e);
         }
     }
 
@@ -857,7 +807,7 @@ public class SceneCanvas extends Canvas {
     private void fadeToMap(String sceneId, Point p) {
         // 渐隐
         this.fadeOut(400);
-        this.isloop = false;
+        this.isLoop = false;
         // prepare map
         TileMap newmap = this.getMap(sceneId);
         Point vp = reviseViewport(newmap, p, this.getWidth(), this.getHeight());
@@ -869,8 +819,8 @@ public class SceneCanvas extends Canvas {
             synchronized (Canvas.UPDATE_LOCK) {
                 this.setMap(newmap);
                 this.setPlayerSceneLocation(p);
-                this.isloop = true;
-                this.maskupdateinit = true;
+                this.isLoop = true;
+                this.maskUpdateInit = true;
             }
         }
         // 渐现
@@ -879,12 +829,10 @@ public class SceneCanvas extends Canvas {
     }
 
     public TileMap getMap(String id) {
-//		TileMap m = maps.get(id);
-//		if (m == null) {
-        DefaultTileMapProvider tileMapProvider = new DefaultTileMapProvider(getDataManager());
+
+        TileMapProvider tileMapProvider = new TileMapProvider(getDataManager());
         TileMap m = tileMapProvider.getResource(id);
-//			maps.put(id, m);
-//		}
+
         m.setAlpha(1.0f);
         return m;
     }
@@ -892,11 +840,6 @@ public class SceneCanvas extends Canvas {
     /**
      *
      * 修正地图显示的区域
-     *
-     * @param map
-     * @param p  player's scene coordinate
-     * @param canvasWidth
-     * @param canvasHeight
      */
     private Point reviseViewport(TileMap map, Point p, int canvasWidth, int canvasHeight) {
         Point vp = new Point(p.x * Application.STEP_DISTANCE, map.getHeight() - p.y * Application.STEP_DISTANCE);
@@ -918,7 +861,6 @@ public class SceneCanvas extends Canvas {
     }
 
     private SceneListener findSceneAction(String id) {
-        Object action = scriptEngine.loadSceneScript(id);
-        return (SceneListener) action;
+        return scriptEngine.loadSceneScript(id);
     }
 }

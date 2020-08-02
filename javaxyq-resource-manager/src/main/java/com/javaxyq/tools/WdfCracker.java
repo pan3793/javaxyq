@@ -6,6 +6,7 @@ package com.javaxyq.tools;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import open.xyq.core.fmt.wdf.WdfFile;
 import com.javaxyq.util.HashUtil;
 
 /**

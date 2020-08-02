@@ -1,5 +1,7 @@
 package com.mxxy.game.config;
 
+import open.xyq.core.util.IoUtil;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +29,7 @@ public class PropertiseConfigImpl implements IPropertiseManager {
 
 	@Override
 	public void loadConfigs() {
-		File file = new File(filename);
+		File file = IoUtil.loadFile(filename);
 		try {
 			if (!file.exists()) {
 				file.createNewFile();

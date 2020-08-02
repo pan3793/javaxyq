@@ -3,6 +3,8 @@
  */
 package com.javaxyq.tools;
 
+import open.xyq.core.fmt.FileObject;
+
 import java.io.File;
 import java.util.Map;
 

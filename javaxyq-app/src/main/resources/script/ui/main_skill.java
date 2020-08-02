@@ -21,7 +21,7 @@ import com.javaxyq.core.SpriteFactory;
 import com.javaxyq.event.ActionEvent;
 import com.javaxyq.event.PanelEvent;
 import com.javaxyq.event.PanelHandler;
-import com.javaxyq.config.ImageConfig;
+import open.xyq.core.config.ImageConfig;
 import com.javaxyq.ui.Label;
 import com.javaxyq.ui.Panel;
 import com.javaxyq.util.StringUtils;

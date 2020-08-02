@@ -1,7 +1,7 @@
 /*
- * JavaXYQ Engine 
- * 
- * javaxyq@2008 all rights. 
+ * JavaXYQ Engine
+ *
+ * javaxyq@2008 all rights.
  * http://www.javaxyq.com
  */
 
@@ -9,13 +9,15 @@ package com.javaxyq.resources;
 
 import java.awt.Image;
 
-import com.javaxyq.core.Pluggable;
+import com.javaxyq.ResourceProvider;
+import open.xyq.core.Pluggable;
 
 
 /**
  * @author 龚德伟
  * @history 2008-5-22 龚德伟 新建
  */
-public interface ImageProvider extends ResourceProvider<Image>,Pluggable{
+public interface ImageProvider extends ResourceProvider<Image>, Pluggable {
+
     Image getImage(String id);
 }

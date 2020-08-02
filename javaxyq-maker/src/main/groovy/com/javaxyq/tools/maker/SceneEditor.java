@@ -24,7 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -45,7 +44,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import com.javaxyq.core.SpriteFactory;
 import com.javaxyq.data.PreexistingEntityException;
 import com.javaxyq.data.SceneNpc;
-import com.javaxyq.tools.JMap;
+import open.xyq.core.JMap;
 import com.javaxyq.ui.Label;
 import com.javaxyq.util.UIUtils;
 import com.javaxyq.widget.Animation;

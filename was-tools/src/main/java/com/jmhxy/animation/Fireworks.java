@@ -10,17 +10,17 @@ import java.util.Vector;
 public class Fireworks implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final int DELAY_INTERVAL = 100;
-	private int maxSequence;
-	private int columnCount;
-	private int rowCount;
+	private final int maxSequence;
+	private final int columnCount;
+	private final int rowCount;
 	private int x;
 	private int y;
 	private int cx;
 	private int cy;
 	private int rx;
 	private int ry;
-	private CellObject[][] table;
-	private Vector<int[][]> sequence;
+	private final CellObject[][] table;
+	private final Vector<int[][]> sequence;
 	private int cellWidth = 17;
 
 	private int cellHeight = 19;
@@ -94,7 +94,7 @@ public class Fireworks implements Serializable {
 	}
 
 	public int[][] getSequence(int index) {
-		int[][] snap = (int[][]) this.sequence.get(index);
+		int[][] snap = this.sequence.get(index);
 		return snap == null ? new int[this.columnCount][this.rowCount] : snap;
 	}
 
@@ -122,8 +122,8 @@ public class Fireworks implements Serializable {
 
 	public void updateToTime(long playTime) {
 		if (this.sequence.size() > 0) {
-			int seqIndex = (int) Math.ceil(playTime / 100L) % this.sequence.size();
-			this.currentSequence = ((int[][]) this.sequence.get(seqIndex));
+			int seqIndex = (int) Math.ceil(playTime / 100.0) % this.sequence.size();
+			this.currentSequence = this.sequence.get(seqIndex);
 		}
 
 		for (int r = 0; r < this.rowCount; r++) {

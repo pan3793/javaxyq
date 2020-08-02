@@ -7,6 +7,8 @@
 
 package com.javaxyq.tools;
 
+import open.xyq.core.fmt.FileObject;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**

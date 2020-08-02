@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import com.javaxyq.util.Utils;
+import open.xyq.core.fmt.FileObject;
+import open.xyq.core.Utils;
 import com.javaxyq.widget.Animation;
 import com.javaxyq.widget.Frame;
 import com.javaxyq.widget.Sprite;
