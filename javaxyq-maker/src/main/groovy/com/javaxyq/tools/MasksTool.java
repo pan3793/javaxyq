@@ -130,9 +130,13 @@ public class MasksTool extends JFrame {
                             g.setColor(lineColor);
                             g.drawLine(rect.x, y, rect.x + rect.width, y);
                             //画掩码标记
-                            if (isMark(x, y)) {
-                                g.setColor(markColor);
-                                g.fillRect(x, y, CELL_WIDTH, CELL_WIDTH);
+                            try {
+                                if (isMark(x, y)) {
+                                    g.setColor(markColor);
+                                    g.fillRect(x, y, CELL_WIDTH, CELL_WIDTH);
+                                }
+                            } catch (Exception e) {
+                                log.info(e.getMessage());
                             }
                         }
                     }
