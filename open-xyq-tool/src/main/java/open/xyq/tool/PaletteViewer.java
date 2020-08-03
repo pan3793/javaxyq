@@ -1,4 +1,4 @@
-package com.javaxyq.tools;
+package open.xyq.tool;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -35,7 +35,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ApplicationActionMap;
 
-import com.javaxyq.ui.CenterLayout;
+import open.xyq.core.ui.CenterLayout;
 import com.javaxyq.ui.Label;
 import com.javaxyq.widget.Sprite;
 import com.jidesoft.dialog.ButtonPanel;

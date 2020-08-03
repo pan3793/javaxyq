@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.util.IoUtil;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +15,7 @@ import java.io.IOException;
 public class MiscTest {
 
     @Test
+    @Disabled
     public void ini() throws IOException {
         Ini ini = new Ini(IoUtil.loadFile("file://C:/Users/cheng.pan/open-xyq-resources/addon.ini"));
         assertEquals(1, ini.keySet().size());

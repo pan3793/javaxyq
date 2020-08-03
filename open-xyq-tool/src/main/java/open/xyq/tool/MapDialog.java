@@ -1,17 +1,9 @@
-package com.javaxyq.tools;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+package open.xyq.tool;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo

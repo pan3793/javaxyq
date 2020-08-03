@@ -1,6 +1,6 @@
-package com.javaxyq.tools;
+package open.xyq.tool;
 
-import com.javaxyq.ui.CenterLayout;
+import open.xyq.core.ui.CenterLayout;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.Utils;
 import open.xyq.core.ui.JMap;
