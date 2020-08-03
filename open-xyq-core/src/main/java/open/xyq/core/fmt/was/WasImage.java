@@ -1,5 +1,6 @@
 package open.xyq.core.fmt.was;
 
+import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.io.SeekByteArrayInputStream;
 import open.xyq.core.util.IoUtil;
 
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Slf4j
 public class WasImage {
     private static final String WAS_FILE_TAG = "SP";
     private static final int WAS_IMAGE_HEADER_SIZE = 12;
@@ -162,8 +164,7 @@ public class WasImage {
                 }
             }
         } catch (Exception e) {
-            System.err.println("load was file failed!");
-            e.printStackTrace();
+            log.error("load was file failed!", e);
         } finally {
             if (in != null)
                 in.close();
@@ -173,7 +174,6 @@ public class WasImage {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //System.out.println((System.currentTimeMillis() - startTime) + "ms");
         }
     }
 
@@ -181,7 +181,7 @@ public class WasImage {
      * 将图片一行RLE编码格式的数据解码,解码后的数据放到pixels中<br>
      * 格式:低16位为[565]rgb颜色值,16-20位为alpha值(最大为0x1F);
      */
-    public void parse(WasFrame frame) throws IOException {
+    public void parse(WasFrame frame) {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
         int[] pixels = new int[frameHeight * frameWidth];
@@ -200,22 +200,15 @@ public class WasImage {
                         if ((b & TYPE_ALPHA_PIXEL) > 0) {
                             c = palette[in.read()];
                             pixels[y * width + x++] = c + ((b & 0x1F) << 16);
-                        } else if (b != 0) {// ???
-                            count = b & 0x1F;// count
-                            b = in.read();// alpha
+                        } else if (b != 0) {  // ???
+                            count = b & 0x1F; // count
+                            b = in.read();    // alpha
                             c = palette[in.read()];
-                            for (int i = 0; i < count; i++) {
+                            for (int i = 0; i < count; i++)
                                 pixels[y * width + x++] = c + ((b & 0x1F) << 16);
-                            }
-                        } else {// block end
-                            if (x > frameWidth) {
-                                System.err.println("block end error: [" + y + "][" + x + "/" + frameWidth + "]");
-                                continue;
-                            } else if (x == 0) {
-                                // System.err.println("x==0");
-                            } else {
-                                x = frameWidth;// set the x value to break the 'while' sentences
-                            }
+                        } else { // block end
+                            if (x != 0)
+                                x = frameWidth; // set the x value to break the 'while' sentences
                         }
                         break;
                     case TYPE_PIXELS:
@@ -242,7 +235,7 @@ public class WasImage {
         }
     }
 
-    private int readInt() throws IOException {
+    private int readInt() {
         int ch1 = in.read();
         int ch2 = in.read();
         int ch3 = in.read();
@@ -250,7 +243,7 @@ public class WasImage {
         return (ch1 + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
     }
 
-    private short readUnsignedShort() throws IOException {
+    private short readUnsignedShort() {
         int ch1 = in.read();
         int ch2 = in.read();
         return (short) ((ch2 << 8) + ch1);

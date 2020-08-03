@@ -225,7 +225,7 @@ public class PaletteViewer extends javax.swing.JFrame {
 
     private void previewScheme(String name) {
         WasDecoder decoder = decoders.get(name);
-        decoder.loadColorationProfile(schemeFile.getAbsolutePath());
+        decoder.loadTintProfile(schemeFile.getAbsolutePath());
         Section[] sections = decoder.getSections();
         JPanel page = new JPanel();
         page.setLayout(new BoxLayout(page, BoxLayout.PAGE_AXIS));
@@ -234,7 +234,7 @@ public class PaletteViewer extends javax.swing.JFrame {
             JPanel linePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
             for (int s = 0; s < count; s++) {
                 decoder.resetPalette();
-                decoder.coloration(i, s);
+                decoder.tint(i, s);
                 JLabel label = new JLabel(new ImageIcon(decoder.getFrameImage(0)));
                 linePanel.add(label);
             }

@@ -129,8 +129,8 @@ public class SpriteFactory {
             if (colorations != null) {
                 String pp = filename.replaceFirst("(\\w)*.tcp", "00.pp");
                 log.info("pp: {}", pp);//XXX
-                decoder.loadColorationProfile(pp);
-                decoder.coloration(colorations);
+                decoder.loadTintProfile(pp);
+                decoder.tint(colorations);
             }
             Sprite s = createSprite(decoder);
             if (colorations != null) {

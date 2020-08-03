@@ -945,7 +945,7 @@ public class Player extends AbstractWidget implements EventTarget {
         if (this.profileData == null) {
             // 解析着色方案
             WasDecoder decoder = new WasDecoder();
-            decoder.loadColorationProfile("shape/char/" + this.character + "/00.pp");
+            decoder.loadTintProfile("shape/char/" + this.character + "/00.pp");
             int partCount = decoder.getSectionCount();
             this.profileData = new int[partCount];
             for (int i = 0; i < partCount; i++) {

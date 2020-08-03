@@ -2,7 +2,7 @@ package open.xyq.core.fmt.was;
 
 import lombok.Getter;
 import lombok.Setter;
-import open.xyq.core.fmt.ColorationScheme;
+import open.xyq.core.fmt.TintScheme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +15,22 @@ public class Section {
     @Setter
     private int end;
 
-    private final List<ColorationScheme> schemes = new ArrayList<>();
+    private final List<TintScheme> schemes = new ArrayList<>();
 
     public Section(int start, int end) {
         this.start = start;
         this.end = end;
     }
 
-    public void addScheme(ColorationScheme scheme) {
+    public void addScheme(TintScheme scheme) {
         this.schemes.add(scheme);
     }
 
-    public void setScheme(int index, ColorationScheme scheme) {
+    public void setScheme(int index, TintScheme scheme) {
         this.schemes.set(index, scheme);
     }
 
-    public ColorationScheme getScheme(int index) {
+    public TintScheme getScheme(int index) {
         return this.schemes.get(index);
     }
 

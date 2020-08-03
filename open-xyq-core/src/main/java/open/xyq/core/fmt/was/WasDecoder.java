@@ -4,15 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.fmt.ColorationScheme;
+import open.xyq.core.fmt.TintScheme;
 import open.xyq.core.io.SeekByteArrayInputStream;
 import open.xyq.core.util.IoUtil;
 import open.xyq.core.util.StrUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileInputStream;
@@ -152,17 +150,12 @@ public class WasDecoder {
                 }
                 WasFrame frame = new WasFrame(frameX, frameY, frameWidth, frameHeight, delay, offset, lineOffsets);
                 this.frames.add(frame);
-
-                // 解析帧数据
-                // int[][] pixels = parse(randomIn, offset, lineOffsets,
-                // frameWidth, frameHeight);
-                // createImage(frameX, frameY, frameWidth, frameHeight, pixels);
             }
         }
     }
 
-    @SneakyThrows // TODO read ini file
-    public void loadColorationProfile(String filename) {
+    @SneakyThrows
+    public void loadTintProfile(String filename) {
         InputStream is = IoUtil.loadResource(filename).getInputStream();
         Scanner scanner = new Scanner(is);
         scanner.useDelimiter("(\r\n)|(\n\r)|[\n\r=]");
@@ -172,9 +165,8 @@ public class WasDecoder {
         int sectionCount = Integer.parseInt(values[0]);
         // section 区间
         int[] sectionBounds = new int[sectionCount + 1];
-        for (int i = 0; i < sectionBounds.length; i++) {
+        for (int i = 0; i < sectionBounds.length; i++)
             sectionBounds[i] = Integer.parseInt(values[i + 1]);
-        }
         // create section
         Section[] sections = new Section[sectionCount];
         for (int i = 0; i < sections.length; i++) {
@@ -185,10 +177,9 @@ public class WasDecoder {
                 strSchemes[0] = scanner.next();
                 strSchemes[1] = scanner.next();
                 strSchemes[2] = scanner.next();
-                ColorationScheme scheme = new ColorationScheme(strSchemes);
+                TintScheme scheme = new TintScheme(strSchemes);
                 section.addScheme(scheme);
             }
-
             sections[i] = section;
         }
         setSections(sections);
@@ -197,9 +188,9 @@ public class WasDecoder {
     /**
      * 设置着色方案
      */
-    public void coloration(int[] schemeIndexes) {
+    public void tint(int[] schemeIndexes) {
         for (int i = 0; i < schemeIndexes.length; i++) {
-            this.coloration(i, schemeIndexes[i]);
+            this.tint(i, schemeIndexes[i]);
         }
         this.schemeIndexes = schemeIndexes;
     }
@@ -207,15 +198,13 @@ public class WasDecoder {
     /**
      * 修改某个区段的着色
      */
-    public void coloration(int sectionIndex, int schemeIndex) {
-        if (this.sections == null) {
+    public void tint(int sectionIndex, int schemeIndex) {
+        if (this.sections == null)
             return;
-        }
         Section section = this.sections[sectionIndex];
-        ColorationScheme scheme = section.getScheme(schemeIndex);
-        for (int i = section.getStart(); i < section.getEnd(); i++) {
+        TintScheme scheme = section.getScheme(schemeIndex);
+        for (int i = section.getStart(); i < section.getEnd(); i++)
             this.palette[i] = scheme.mix(this.originPalette[i]);
-        }
     }
 
     public int getSectionCount() {
@@ -233,19 +222,15 @@ public class WasDecoder {
         int[] iArray = new int[4];
         for (int y1 = 0; y1 < h && y1 + y < height; y1++) {
             for (int x1 = 0; x1 < w && x1 + x < width; x1++) {
-                // red 5
-                iArray[0] = ((pixels[y1 * w + x1] >>> 11) & 0x1F) << 3;
-                // green 6
-                iArray[1] = ((pixels[y1 * w + x1] >>> 5) & 0x3f) << 2;
-                // blue 5
-                iArray[2] = (pixels[y1 * w + x1] & 0x1F) << 3;
-                // alpha 5
-                iArray[3] = ((pixels[y1 * w + x1] >>> 16) & 0x1f) << 3;
+                iArray[0] = (pixels[y1 * w + x1] >>> 11 & 0x1F) << 3; // red   5
+                iArray[1] = (pixels[y1 * w + x1] >>> 5 & 0x3f) << 2;  // green 6
+                iArray[2] = (pixels[y1 * w + x1] & 0x1F) << 3;        // blue  5
+                iArray[3] = (pixels[y1 * w + x1] >>> 16 & 0x1f) << 3; // alpha 5
                 try {
                     raster.setPixel(x1 + x, y1 + y, iArray);
                 } catch (Exception e) {
-                    System.out.printf("%s: x=%s,y=%s,pixel=[%s,%s,%s,%s]\n",
-                            e.getMessage(), x1 + x, y1 + y, iArray[0], iArray[1], iArray[2], iArray[3]);
+                    log.warn("{}: x={}, y={}, pixel=[{},{},{},{}]", e.getMessage(),
+                            x1 + x, y1 + y, iArray[0], iArray[1], iArray[2], iArray[3]);
                 }
             }
         }
@@ -254,28 +239,23 @@ public class WasDecoder {
     private int[] convert(int[] pixels) {
         int[] data = new int[pixels.length * 4];
         for (int i = 0; i < pixels.length; i++) {
-            // red 5
-            data[i * 4] = ((pixels[i] >>> 11) & 0x1F) << 3;
-            // green 6
-            data[i * 4 + 1] = ((pixels[i] >>> 5) & 0x3f) << 2;
-            // blue 5
-            data[i * 4 + 2] = (pixels[i] & 0x1F) << 3;
-            // alpha 5
-            data[i * 4 + 3] = ((pixels[i] >>> 16) & 0x1f) << 3;
+            data[i * 4] = ((pixels[i] >>> 11) & 0x1F) << 3;     // red   5
+            data[i * 4 + 1] = ((pixels[i] >>> 5) & 0x3f) << 2;  // green 6
+            data[i * 4 + 2] = (pixels[i] & 0x1F) << 3;          // blue  5
+            data[i * 4 + 3] = ((pixels[i] >>> 16) & 0x1f) << 3; // alpha 5
         }
         return data;
     }
 
     public BufferedImage getFrame(int index) {
         WasFrame frame = this.frames.get(index);
-        if (frame.getPixels() == null) {
+        if (frame.getPixels() == null)
             frame.setPixels(parse(frame));
-        }
-        if (this.frameCount == 1) {// 修正单帧动画的偏移问题
+        // 修正单帧动画的偏移问题
+        if (this.frameCount == 1)
             return createImage(refPixelX, refPixelY, frame.getWidth(), frame.getHeight(), frame.getPixels());
-        } else {
+        else
             return createImage(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight(), frame.getPixels());
-        }
     }
 
     /**
@@ -303,34 +283,11 @@ public class WasDecoder {
         return this.frames.get(index).getDelay();
     }
 
-    private static final int DCM_565_ALPHA_MASK = 0x1f0000;
-    private static final int DCM_565_RED_MASK = 0xf800;
-    private static final int DCM_565_GRN_MASK = 0x07E0;
-    private static final int DCM_565_BLU_MASK = 0x001F;
-
     public BufferedImage createImage(int x, int y, int frameWidth, int frameHeight, int[] pixels) {
         // use sprite's width & height
         BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
         draw(pixels, image.getRaster(), refPixelX - x, refPixelY - y, frameWidth, frameHeight);
         return image;
-//		return createDirectImage(x, y, frameWidth, frameHeight, pixels);
-    }
-
-    public BufferedImage createDirectImage(int x, int y, int frameWidth, int frameHeight, int[] pixels) {
-        ColorModel colorModel;
-        WritableRaster raster;
-//		colorModel = new DirectColorModel(21, DCM_565_RED_MASK, DCM_565_GRN_MASK, DCM_565_BLU_MASK, DCM_565_ALPHA_MASK);
-        colorModel = new DirectColorModel(32, 0xff0000, 0xff00, 0xff, 0xff000000);
-        raster = colorModel.createCompatibleWritableRaster(width, height);
-        x = refPixelX - x;
-        y = refPixelY - y;
-        frameWidth = Math.min(frameWidth, width - x);
-        frameHeight = Math.min(frameHeight, height - y);
-
-        //raster.setDataElements(x, y, frameWidth, frameHeight, pixels);
-        raster.setPixels(x, y, frameWidth, frameHeight, convert(pixels));
-
-        return new BufferedImage(colorModel, raster, true, null);
     }
 
 
@@ -352,12 +309,12 @@ public class WasDecoder {
         } else {
             byte[] buf2 = new byte[buf.length + in.available()];
             System.arraycopy(buf, 0, buf2, 0, buf.length);
-            int a = 0, count = buf.length;
+            int a, count = buf.length;
             while (in.available() > 0) {
                 a = in.read(buf2, count, in.available());
                 count += a;
             }
-            // construct a new seekable stream
+            // construct a new seek stream
             randomIn = new SeekByteArrayInputStream(buf2);
         }
         // skip header
@@ -384,29 +341,17 @@ public class WasDecoder {
                         if ((b & TYPE_ALPHA_PIXEL) > 0) {
                             index = in.read();
                             c = palette[index];
-                            // palette[index]=0;
-
                             pixels[y * frameWidth + x++] = c + ((b & 0x1F) << 16);
-                        } else if (b != 0) {// ???
-                            count = b & 0x1F;// count
-                            b = in.read();// alpha
+                        } else if (b != 0) {  // ???
+                            count = b & 0x1F; // count
+                            b = in.read();    // alpha
                             index = in.read();
                             c = palette[index];
-                            // palette[index]=0;
-
-                            for (int i = 0; i < count; i++) {
+                            for (int i = 0; i < count; i++)
                                 pixels[y * frameWidth + x++] = c + ((b & 0x1F) << 16);
-                            }
-                        } else {// block end
-                            if (x > frameWidth) {
-                                System.err.println("block end error: [" + y + "][" + x + "/" + frameWidth + "]");
-                                continue;
-                            } else if (x == 0) {
-                                // System.err.println("x==0");
-                            } else {
-                                x = frameWidth;// set the x value to break the
-                                // 'while' sentences
-                            }
+                        } else { // block end
+                            if (x != 0)
+                                x = frameWidth;
                         }
                         break;
                     case TYPE_PIXELS:
@@ -414,28 +359,25 @@ public class WasDecoder {
                         for (int i = 0; i < count; i++) {
                             index = in.read();
                             pixels[y * frameWidth + x++] = palette[index] + (0x1F << 16);
-                            // palette[index]=0;
-
                         }
                         break;
                     case TYPE_REPEAT:
                         count = b & 0x3F;
                         index = in.read();
                         c = palette[index];
-                        // palette[index]=0;
-
-                        for (int i = 0; i < count; i++) {
+                        for (int i = 0; i < count; i++)
                             pixels[y * frameWidth + x++] = c + (0x1F << 16);
-                        }
                         break;
                     case TYPE_SKIP:
                         count = b & 0x3F;
                         x += count;
                         break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + (b & TYPE_FLAG));
                 }
             }
             if (x > frameWidth)
-                log.error("block end error: [" + y + "][" + x + "/" + frameWidth + "]");
+                log.error("block end error: [{}][{}/{}]", y, x, frameWidth);
         }
         return pixels;
     }

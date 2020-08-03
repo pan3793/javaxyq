@@ -10,11 +10,11 @@ package open.xyq.core.fmt;
 /**
  * 染色方案
  */
-public class ColorationScheme {
+public class TintScheme {
 
     private final short[][] colors = new short[3][3];
 
-    public ColorationScheme(String[] schemes) {
+    public TintScheme(String[] schemes) {
         for (int r = 0; r < schemes.length; r++) {
             String[] colors = schemes[r].split(" ");
             for (int c = 0; c < colors.length; c++)

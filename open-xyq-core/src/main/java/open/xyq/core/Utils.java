@@ -1,33 +1,20 @@
 package open.xyq.core;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.ui.ExampleFileFilter;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.FontUIResource;
-
-import lombok.extern.slf4j.Slf4j;
-import open.xyq.core.ui.ExampleFileFilter;
+import java.awt.*;
+import java.awt.image.RenderedImage;
+import java.io.*;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 @Slf4j
 public class Utils {
@@ -60,10 +47,6 @@ public class Utils {
 
     public static FileFilter iniFilter = new ExampleFileFilter("ini", "INI 文件");
 
-    public static final String PROPERTY_LAST_OPEN_DIR = "LastOpenDir";
-
-    public static final String PROPERTY_LAST_SAVE_DIR = "LastSaveDir";
-
     public static final int FILE_TYPE_WAS = 1;
 
     public static final int FILE_TYPE_WDF = 2;
@@ -80,7 +63,7 @@ public class Utils {
 
     public static final int FILE_TYPE_WTC = 100;
 
-    public static final int FILE_TYPE_UNKNOW = 0xFF;
+    public static final int FILE_TYPE_UNKNOWN = 0xFF;
 
     private static File lastOpenDir = new File(".");
 
@@ -156,7 +139,6 @@ public class Utils {
                 imgWriter.setOutput(imgOut);
                 IIOImage iioImage = new IIOImage(img, null, null);
                 imgWriter.write(iioImage);
-                //ImageIO.write(img, format, outputFile);
                 imgOut.close();
                 return true;
             } catch (IOException e) {
@@ -164,42 +146,6 @@ public class Utils {
             }
         }
         return false;
-    }
-
-    private static Properties properties;
-
-    public static void loadSettings(String filename) {
-        properties = new Properties();
-        try {
-            FileInputStream fis = new FileInputStream(filename);
-            properties.load(fis);
-            fis.close();
-            lastOpenDir = new File(properties.getProperty(PROPERTY_LAST_OPEN_DIR, "."));
-            lastSaveDir = new File(properties.getProperty(PROPERTY_LAST_SAVE_DIR, "."));
-        } catch (Exception e) {
-        }
-    }
-
-    public static String getProperty(String key) {
-        return properties.getProperty(key);
-    }
-
-    public static void setProperty(String key, String value) {
-        properties.setProperty(key, value);
-    }
-
-    public static boolean saveSettings(String comments, String filename) {
-        try {
-            properties.setProperty(PROPERTY_LAST_OPEN_DIR, lastOpenDir.getAbsolutePath());
-            properties.setProperty(PROPERTY_LAST_SAVE_DIR, lastSaveDir.getAbsolutePath());
-            OutputStream fos = new FileOutputStream(filename);
-            properties.store(fos, comments);
-            fos.close();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public static Icon loadIcon(String filename) {
@@ -218,7 +164,7 @@ public class Utils {
      */
     public static int getFileType(String filename) {
         filename = filename.toLowerCase();
-        int type = FILE_TYPE_UNKNOW;
+        int type = FILE_TYPE_UNKNOWN;
         if (filename.endsWith(".was")) {
             type = FILE_TYPE_WAS;
         } else if (filename.endsWith(".wdf")) {

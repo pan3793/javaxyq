@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.lang.ref.WeakReference;
 
 @Getter

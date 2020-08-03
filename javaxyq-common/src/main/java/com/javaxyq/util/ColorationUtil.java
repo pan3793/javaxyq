@@ -29,7 +29,7 @@ public class ColorationUtil {
         WasDecoder decoder = new WasDecoder();
         InputStream is = Toolkit.getInputStream(resId);
         decoder.load(is);
-        decoder.loadColorationProfile(profile);
+        decoder.loadTintProfile(profile);
         return decoder;
     }
 
@@ -39,7 +39,7 @@ public class ColorationUtil {
             //设置染色方式
             int partCount = decoder.getSectionCount() - 1;
             for (int i = 0; i < partCount; i++) {
-                decoder.coloration(i, sprite.getColoration(i));
+                decoder.tint(i, sprite.getColoration(i));
             }
 
             int centerX, centerY;
