@@ -43,15 +43,10 @@ public class Wildcard {
 
     /***********************************************************************
      *  Check if pattern string matches text string.
-     *
      *  At the beginning of iteration i of main loop
-     *
      *     old[j]    = true if pattern[0..j] matches text[0..i-1]
-     *
      *  By comparing pattern[j] with text[i], the main loop computes
-     *
      *     states[j] = true if pattern[0..j] matches text[0..i]
-     *
      ***********************************************************************/
     static public boolean matches(String pattern, String text) {
         // add sentinel so don't need to worry about *'s at end of pattern

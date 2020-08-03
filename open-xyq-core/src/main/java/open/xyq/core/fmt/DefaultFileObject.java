@@ -17,6 +17,8 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import lombok.Getter;
+import lombok.Setter;
 import open.xyq.core.Wildcard;
 
 /**
@@ -25,6 +27,7 @@ import open.xyq.core.Wildcard;
  */
 public class DefaultFileObject implements FileObject {
 
+    @Getter
     private final DefaultFileSystem fileSystem;
 
     private final Comparator<File> fileComparator = (o1, o2) -> {
@@ -35,6 +38,8 @@ public class DefaultFileObject implements FileObject {
         return result;
     };
 
+    @Getter
+    @Setter
     private File file;
 
     public DefaultFileObject(DefaultFileSystem filesystem, String pathname) {
@@ -52,14 +57,7 @@ public class DefaultFileObject implements FileObject {
         this.file = file;
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
-    }
-
+    @Override
     public byte[] getData() throws IOException {
         DataInputStream is = getDataStream();
         byte[] data = new byte[(int) file.length()];
@@ -67,6 +65,7 @@ public class DefaultFileObject implements FileObject {
         return data;
     }
 
+    @Override
     public DataInputStream getDataStream() throws FileNotFoundException {
         return new DataInputStream(new FileInputStream(file));
     }
@@ -93,30 +92,34 @@ public class DefaultFileObject implements FileObject {
 
     @Override
     public FileObject[] listFiles(String filter) {
-        File[] allfiles = null;
+        File[] allFiles;
         if (filter != null && filter.trim().length() != 0 && !filter.trim().equals("*")) {
-            if (filter.indexOf('*') == -1) {
+            if (filter.indexOf('*') == -1)
                 filter = "*" + filter + "*";
-            }
             final String pattern = filter.toLowerCase();
-            FilenameFilter namefilter = (dir, name) -> Wildcard.matches(pattern, name.toLowerCase());
-            allfiles = file.listFiles(namefilter);
+            FilenameFilter nameFilter = (dir, name) -> Wildcard.matches(pattern, name.toLowerCase());
+            allFiles = file.listFiles(nameFilter);
         } else {
-            allfiles = file.listFiles();
+            allFiles = file.listFiles();
         }
-        Arrays.sort(allfiles, fileComparator);
-        FileObject[] fileObjects = new FileObject[allfiles.length];
-        for (int i = 0; i < allfiles.length; i++) {
-            DefaultFileObject fileObj = new DefaultFileObject(fileSystem, allfiles[i]);
+        if (allFiles == null)
+            return new FileObject[0];
+
+        Arrays.sort(allFiles, fileComparator);
+        FileObject[] fileObjects = new FileObject[allFiles.length];
+        for (int i = 0; i < allFiles.length; i++) {
+            DefaultFileObject fileObj = new DefaultFileObject(fileSystem, allFiles[i]);
             fileObjects[i] = fileObj;
         }
         return fileObjects;
     }
 
+    @Override
     public FileObject[] listFiles() {
         return listFiles(null);
     }
 
+    @Override
     public int compareTo(FileObject o) {
         if (this.isDirectory() && !o.isDirectory()) {
             return 1;
@@ -126,10 +129,7 @@ public class DefaultFileObject implements FileObject {
         return this.getPath().compareTo(o.getPath());
     }
 
-    public FileSystem getFileSystem() {
-        return this.fileSystem;
-    }
-
+    @Override
     public FileObject getParent() {
         return new DefaultFileObject(this.fileSystem, this.file.getParent());
     }

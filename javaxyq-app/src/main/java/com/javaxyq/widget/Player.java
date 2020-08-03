@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.event.EventListenerList;
 
-import open.xyq.core.AbstractWidget;
+import open.xyq.core.ui.AbstractWidget;
 import open.xyq.core.Env;
 import com.javaxyq.core.Application;
 import com.javaxyq.core.SpriteFactory;

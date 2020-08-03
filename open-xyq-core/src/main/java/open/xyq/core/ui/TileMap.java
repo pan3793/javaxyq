@@ -7,7 +7,6 @@
 
 package open.xyq.core.ui;
 
-import open.xyq.core.AbstractWidget;
 import open.xyq.core.cfg.MapConfig;
 import open.xyq.core.fmt.map.MapUnit;
 import open.xyq.core.fmt.map.MaskUnit;

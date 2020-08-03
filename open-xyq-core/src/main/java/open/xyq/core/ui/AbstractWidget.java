@@ -5,7 +5,7 @@
  * http://www.javaxyq.com
  */
 
-package open.xyq.core;
+package open.xyq.core.ui;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package com.javaxyq.widget;
 
-import open.xyq.core.AbstractWidget;
+import open.xyq.core.ui.AbstractWidget;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
