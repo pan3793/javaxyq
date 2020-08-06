@@ -27,7 +27,7 @@ public class PlayerConfig implements Config {
     private int direction;
     private int x;
     private int y;
-    private String colorations;
+    private String tints;
     private String movement;
     private long period;
 
@@ -47,7 +47,7 @@ public class PlayerConfig implements Config {
                 "id=" + this.id +
                 "character=" + this.character +
                 ",name=" + this.name +
-                ",colorations=" + this.colorations +
+                ",tints=" + this.tints +
                 ",movement=" + this.movement +
                 "]";
     }

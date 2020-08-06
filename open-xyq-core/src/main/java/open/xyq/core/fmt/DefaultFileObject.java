@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 import lombok.Getter;
 import lombok.Setter;
-import open.xyq.core.Wildcard;
+import open.xyq.core.util.StrUtil;
 
 /**
  * @author 龚德伟
@@ -97,7 +97,7 @@ public class DefaultFileObject implements FileObject {
             if (filter.indexOf('*') == -1)
                 filter = "*" + filter + "*";
             final String pattern = filter.toLowerCase();
-            FilenameFilter nameFilter = (dir, name) -> Wildcard.matches(pattern, name.toLowerCase());
+            FilenameFilter nameFilter = (dir, name) -> StrUtil.wildcardMatches(pattern, name.toLowerCase());
             allFiles = file.listFiles(nameFilter);
         } else {
             allFiles = file.listFiles();

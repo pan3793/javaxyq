@@ -1,6 +1,5 @@
 package open.xyq.core.fmt.wdf;
 
-import lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import open.xyq.core.Utils;
 import open.xyq.core.fmt.FileObject;
@@ -134,12 +133,12 @@ public class WdfFile implements FileSystem {
         for (Entry<Long, WdfFileNode> entry : fileNodeMap.entrySet()) {
             WdfFileNode node = entry.getValue();
             String path = id2PathMap.get(entry.getKey());
-            path = StringUtils.replaceChars(path, '\\', '/');
             if (path != null) {
+                path = path.replace('\\', '/');
                 if (path.charAt(0) != '/')
                     path = "/" + path;
                 node.setPath(path);
-                node.setName(StringUtils.substringAfterLast(path, "/"));
+                node.setName(StrUtil.substringAfterLast(path, "/"));
                 iCount++;
             } else { // 找不到path
                 String strId = Long.toHexString(entry.getKey());

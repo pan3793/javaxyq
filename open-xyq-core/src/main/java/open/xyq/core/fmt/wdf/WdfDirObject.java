@@ -7,18 +7,16 @@
 
 package open.xyq.core.fmt.wdf;
 
+import open.xyq.core.fmt.FileObject;
+import open.xyq.core.fmt.FileSystem;
+import open.xyq.core.util.StrUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import lang.StringUtils;
-
-import open.xyq.core.Wildcard;
-import open.xyq.core.fmt.FileObject;
-import open.xyq.core.fmt.FileSystem;
 
 /**
  * @author 龚德伟
@@ -40,7 +38,7 @@ public class WdfDirObject implements FileObject {
         }
         String[] paths = path.split("/");
         if (paths.length == 0) {// root
-            this.name = StringUtils.substringAfterLast(fileSystem.getName(), "/");
+            this.name = StrUtil.substringAfterLast(fileSystem.getName(), "/");
         } else {// last part name
             this.name = paths[paths.length - 1];
         }
@@ -50,7 +48,7 @@ public class WdfDirObject implements FileObject {
         this.fileSystem = wdfFile;
         this.path = "/";
         this.parent = null;
-        this.name = StringUtils.substringAfterLast(fileSystem.getName(), "/");
+        this.name = StrUtil.substringAfterLast(fileSystem.getName(), "/");
     }
 
     public String getContentType() {
@@ -96,12 +94,12 @@ public class WdfDirObject implements FileObject {
             final String pattern = filter.toLowerCase();
             List<FileObject> result = new ArrayList<FileObject>();
             for (WdfFileNode fileObj : allfiles) {
-                if (Wildcard.matches(pattern, fileObj.getName().toLowerCase())) {
+                if (StrUtil.wildcardMatches(pattern, fileObj.getName().toLowerCase())) {
                     result.add(fileObj);
                 } else {
                     String _id = Long.toHexString(fileObj.getId()).toLowerCase();
                     String _desc = fileObj.getDescription().toLowerCase();
-                    if (Wildcard.matches(pattern, _desc) || Wildcard.matches(pattern, _id)) {
+                    if (StrUtil.wildcardMatches(pattern, _desc) || StrUtil.wildcardMatches(pattern, _id)) {
                         result.add(fileObj);
                     }
                 }

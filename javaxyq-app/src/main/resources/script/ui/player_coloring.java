@@ -190,7 +190,7 @@ public class player_coloring extends PanelHandler {
 		}else {
 			player.getData().money -= cost;
 			doTalk(null,"共花费了"+cost+"两，欢迎下次光临！#32");
-			player.setColorations(colorations,true);
+			player.setTints(colorations,true);
 			System.out.println("coloring: {" + colorations[0] + "," + colorations[1]+ "," + colorations[2] + "}");
 		}		
 	}

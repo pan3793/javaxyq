@@ -11,6 +11,7 @@ import com.javaxyq.util.StringUtils;
 import com.javaxyq.util.UIUtils;
 import com.javaxyq.widget.Player;
 import lombok.extern.slf4j.Slf4j;
+import open.xyq.core.util.ArrayUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
@@ -31,6 +32,7 @@ public class DataStore implements DataManager {
     private static int elfId;
     /**
      * 人物升级经验表
+     * 约为三阶关系
      */
     private static final int[] levelExpTable = {
             40, 110, 237, 450, 779, 1252, 1898, 2745, 3822, 5159, 6784, 8726, 11013, 13674, 16739, 20236, 24194, 28641, 330606, 39119,
@@ -84,16 +86,6 @@ public class DataStore implements DataManager {
 
     public static final String[] 仙族门派 = {"天宫", "龙宫", "五庄观", "普陀山"};
 
-    /**
-     * 判断数组array是否包含值value
-     */
-    private static boolean inArray(String[] array, String value) {
-        for (String s : array) {
-            if (s.equals(value)) return true;
-        }
-        return false;
-    }
-
     private static Properties parseConfig(String str) {
         Properties configs = new Properties();
         try {
@@ -113,20 +105,20 @@ public class DataStore implements DataManager {
 
     private Context context;
 
-    private Map<String, Integer> devilData = new HashMap<String, Integer>();
+    private Map<String, Integer> devilData = new HashMap<>();
 
     /**
      * 成长率表
      */
-    private Map<String, Double> growthRateTable = new HashMap<String, Double>();
+    private Map<String, Double> growthRateTable = new HashMap<>();
 
-    private Map<String, Integer> humanData = new HashMap<String, Integer>();
+    private Map<String, Integer> humanData = new HashMap<>();
 
-    private Map<String, Integer> immortalData = new HashMap<String, Integer>();
+    private Map<String, Integer> immortalData = new HashMap<>();
 
-    private Map<Player, ItemInstance[]> itemsMap = new HashMap<Player, ItemInstance[]>();
+    private Map<Player, ItemInstance[]> itemsMap = new HashMap<>();
 
-    private List<BaseItemDAO> itemDAOs = new ArrayList<BaseItemDAO>();
+    private List<BaseItemDAO> itemDAOs = new ArrayList<>();
     private String lastChat = "";
     private MedicineItemDAOImpl medicineDAO;
     private Random rand = new Random();
@@ -362,14 +354,14 @@ public class DataStore implements DataManager {
     public Player createPlayer(PlayerConfig cfg) {
         Player player = new Player(cfg.getId(), cfg.getName(), cfg.getCharacter());
         player.setSceneLocation(cfg.getX(), cfg.getY());
-        String strColorations = cfg.getColorations();
-        if (strColorations != null) {// 染色
-            String[] colors = strColorations.split(",");
-            int[] colorations = new int[colors.length];
+        String tintsStr = cfg.getTints();
+        if (tintsStr != null) {// 染色
+            String[] colors = tintsStr.split(",");
+            int[] tints = new int[colors.length];
             for (int i = 0; i < colors.length; i++) {
-                colorations[i] = colors[i].charAt(0) - '0';
+                tints[i] = colors[i].charAt(0) - '0';
             }
-            player.setColorations(colorations, false);//在setState之前
+            player.setTints(tints, false); // 在setState之前
         }
         player.setState(cfg.getState());
         player.setDirection(cfg.getDirection());
@@ -388,7 +380,7 @@ public class DataStore implements DataManager {
 
     public Player createPlayer(String character, int[] colorations) {
         Player player = new Player(null, "未命名", character);
-        player.setColorations(colorations, true);
+        player.setTints(colorations, true);
         player.setState(Player.STATE_STAND);
         player.setDirection(0);
         return player;
@@ -422,7 +414,7 @@ public class DataStore implements DataManager {
     public String findChatText(String npcId) {
         File file = CacheManager.getInstance().getFile("chat/" + npcId + ".txt");
         if (file != null && file.exists()) {
-            List<String> chats = new ArrayList<String>();
+            List<String> chats = new ArrayList<>();
             try {
                 String str = null;
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -702,11 +694,11 @@ public class DataStore implements DataManager {
 
     public void initPlayerData(PlayerVO vo) {
         try {
-            if (inArray(人族, vo.character)) {
+            if (ArrayUtil.contains(人族, vo.character)) {
                 BeanUtils.populate(vo, humanData);
-            } else if (inArray(魔族, vo.character)) {
+            } else if (ArrayUtil.contains(魔族, vo.character)) {
                 BeanUtils.populate(vo, devilData);
-            } else if (inArray(仙族, vo.character)) {
+            } else if (ArrayUtil.contains(仙族, vo.character)) {
                 BeanUtils.populate(vo, immortalData);
             }
             vo.maxHp = vo.hp;
@@ -726,11 +718,11 @@ public class DataStore implements DataManager {
     public PlayerVO createPlayerData(String character) {
         try {
             PlayerVO vo = new PlayerVO();
-            if (inArray(人族, character)) {
+            if (ArrayUtil.contains(人族, character)) {
                 BeanUtils.populate(vo, humanData);
-            } else if (inArray(魔族, character)) {
+            } else if (ArrayUtil.contains(魔族, character)) {
                 BeanUtils.populate(vo, devilData);
-            } else if (inArray(仙族, character)) {
+            } else if (ArrayUtil.contains(仙族, character)) {
                 BeanUtils.populate(vo, immortalData);
             }
             vo.character = character;
@@ -786,7 +778,7 @@ public class DataStore implements DataManager {
             ois.close();
 
             //初始化
-            Map<String, Object> data = new HashMap<String, Object>();
+            Map<String, Object> data = new HashMap<>();
             data.put("name", playerData.name);
             data.put("level", playerData.level);
             data.put("school", playerData.school);
@@ -833,8 +825,6 @@ public class DataStore implements DataManager {
 
     /**
      * 计算怪物的属性值
-     *
-     * @param vo
      */
     public void reCalcElfProps(PlayerVO vo) {
         //TODO 完善成长率
@@ -857,8 +847,6 @@ public class DataStore implements DataManager {
 
     /**
      * 计算人物的属性值
-     *
-     * @param vo
      */
     public void reCalcProperties(PlayerVO vo) {
         String[] attrs = {"hitrate", "speed", "wakan", "shun", "harm", "defense", "stamina", "energy"};

@@ -43,4 +43,39 @@ public class StrUtil {
         }
         return str.substring(pos + separator.length());
     }
+
+    /**
+     *  Check if pattern string matches text string.
+     *    At the beginning of iteration i of main loop
+     *      old[j] = true if pattern[0..j] matches text[0..i-1]
+     *    By comparing pattern[j] with text[i], the main loop computes
+     *      states[j] = true if pattern[0..j] matches text[0..i]
+     */
+    public static boolean wildcardMatches(String pattern, String text) {
+        // add sentinel so don't need to worry about *'s at end of pattern
+        text += '\0';
+        pattern += '\0';
+
+        int N = pattern.length();
+
+        boolean[] states = new boolean[N + 1];
+        boolean[] old = new boolean[N + 1];
+        old[0] = true;
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            states = new boolean[N + 1];       // initialized to false
+            for (int j = 0; j < N; j++) {
+                char p = pattern.charAt(j);
+                // hack to handle *'s that match 0 characters
+                if (old[j] && (p == '*')) old[j + 1] = true;
+                if (old[j] && (p == c)) states[j + 1] = true;
+                if (old[j] && (p == '?')) states[j + 1] = true;
+                if (old[j] && (p == '*')) states[j] = true;
+                if (old[j] && (p == '*')) states[j + 1] = true;
+            }
+            old = states;
+        }
+        return states[N];
+    }
 }

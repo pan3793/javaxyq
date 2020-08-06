@@ -914,7 +914,7 @@ public class Player extends AbstractWidget implements EventTarget {
         return colorations;
     }
 
-    public void setColorations(int[] colorations, boolean recreate) {
+    public void setTints(int[] colorations, boolean recreate) {
         this.colorations = colorations;
         if (recreate) {
             this.coloring(colorations);
@@ -1041,7 +1041,7 @@ public class Player extends AbstractWidget implements EventTarget {
         this.data = data;
         this.setDirection(data.direction);
         //加载着色精灵
-        this.setColorations(data.colorations, true);
+        this.setTints(data.colorations, true);
         this.setState(data.state);
         this.setSceneLocation(data.getSceneLocation());
     }
