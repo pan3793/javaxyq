@@ -23,8 +23,11 @@ import java.io.OutputStream;
  * @author 龚德伟(kylixs)
  * @history 2007-01-23 新建
  * @history 2008-03-09 增加导出整张地图的功能
+ *
+ * Deprecated, use MapVision instead.
  */
 @Slf4j
+@Deprecated
 public class MapBrowser extends JFrame {
 
     private static final long serialVersionUID = 1L;

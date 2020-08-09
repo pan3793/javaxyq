@@ -14,11 +14,21 @@ import open.xyq.core.fmt.map.TileMapProvider;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
+
+/**
+ * 地图查看器，基于 JavaFX 实现
+ * TODO：
+ *   update status labels
+ *   export tile maps
+ *   export entire map
+ * NOT DO:
+ *   support JPG2
+ */
 @Slf4j
 public class MapVision extends Application {
     private Stage mainStage;
 
-    private final TilePane mapPane = new TilePane();
+    private final TilePane tileMapPane = new TilePane();
 
     private final Label hitsLabel = new Label("");
     private final Label sizeLabel = new Label("");
@@ -32,15 +42,11 @@ public class MapVision extends Application {
     public void start(Stage stage) {
         mainStage = stage;
 
-        stage.setTitle("Map Vision");
-
         VBox rootPane = new VBox();
-        ScrollPane scrollPane = new ScrollPane();
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.setContent(mapPane);
-        rootPane.getChildren().addAll(createMenuBar(), scrollPane, createStatusPane());
-
+        rootPane.getChildren().addAll(createMenuBar(), createTileMapPane(), createStatusPane());
         Scene scene = new Scene(rootPane, 800, 600);
+
+        stage.setTitle("Map Vision");
         stage.setScene(scene);
         stage.show();
     }
@@ -71,6 +77,13 @@ public class MapVision extends Application {
         return menuBar;
     }
 
+    private ScrollPane createTileMapPane() {
+        ScrollPane scrollPane = new ScrollPane();
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        scrollPane.setContent(tileMapPane);
+        return scrollPane;
+    }
+
     private HBox createStatusPane() {
         HBox statusPane = new HBox();
         statusPane.getChildren().addAll(hitsLabel, sizeLabel, pathLabel, viewRectLabel, segmentsLabel);
@@ -82,14 +95,14 @@ public class MapVision extends Application {
         int vCnt = mapProvider.getVBlockCount();
         int hCnt = mapProvider.getHBlockCount();
 
-        mapPane.setPrefRows(vCnt);
-        mapPane.setPrefColumns(hCnt);
+        tileMapPane.setPrefRows(vCnt);
+        tileMapPane.setPrefColumns(hCnt);
 
-        mapPane.getChildren().clear();
+        tileMapPane.getChildren().clear();
         for (int v = 0; v < vCnt; v++) {
             for (int h = 0; h < hCnt; h++) {
                 byte[] data = mapProvider.readJpegData(h, v);
-                mapPane.getChildren().add(new ImageView(new Image(new ByteArrayInputStream(data))));
+                tileMapPane.getChildren().add(new ImageView(new Image(new ByteArrayInputStream(data))));
             }
         }
     }
