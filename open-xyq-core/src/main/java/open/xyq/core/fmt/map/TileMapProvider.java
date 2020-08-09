@@ -270,8 +270,12 @@ public class TileMapProvider implements MapProvider {
             int len = raf.read();
             raf.skipBytes(3 + len * 4);
             raf.read(buf);
-            String str = new String(buf);
-            return str.equals(MAGIC_HEADER_JPEG);
+            String magicHeader = new String(buf);
+            if (magicHeader.equals("2GPJ")) {
+                log.warn("don't support 2GPJ map");
+                return false;
+            }
+            return magicHeader.equals(MAGIC_HEADER_JPEG);
         } catch (IOException ex) {
             log.error(ex.getMessage());
         }
